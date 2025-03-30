@@ -1,0 +1,3 @@
+D:/Project/FileDatamanager/build/CMakeFiles/Main.dir
+D:/Project/FileDatamanager/build/CMakeFiles/ALL_BUILD.dir
+D:/Project/FileDatamanager/build/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+package file_system;
+service AuthService {
+  // 用户登录获取Token
+  rpc Login(LoginRequest) returns (LoginResponse);
+  
+  // 权限验证（元数据中携带Token）
+  rpc CheckPermission(PermissionRequest) returns (PermissionResponse);
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;    // JWT或OAuth2令牌
+  int64 expires_in = 2; 
+}
+
+message PermissionRequest {
+  string resource_path = 1;  // 文件路径
+  string action = 2;         // 操作类型（read/write/delete）
+}
+
+message PermissionResponse {
+  bool allowed = 1;
+  string reason = 2;         // 权限不足时的说明
+}
+
+enum FileOperationType {
+    CREATE = 0;
+    REMOVE = 1;
+    RENAME = 2;
+    COPY   = 3;
+}
+
+service FileService {
+  rpc FileOperation(FileOperationRequest) returns (OperationResponse);
+
+
+  rpc UploadFileRequest(FileMetadata) returns (UploadFileResponse);
+
+  // 客户端流式上传（支持断点续传）
+  rpc UploadFile(stream FileChunk) returns (UploadStatus);
+
+  // 服务端流式下载
+  rpc DownloadFile(FileRequest) returns (stream FileChunk);
+
+  // 查询上传断点状态
+  rpc CheckUploadStatus(FileMetadata) returns (UploadStatus);
+ 
+  //合并请求
+  rpc MergeChunkRequest(FileMetadata) returns (OperationResponse);
+
+
+  rpc FindFile(FindFileRequest) returns (stream FileMetadata);
+} 
+message FileOperationRequest{
+    FileOperationType type = 1;
+    oneof request{
+        CreateRequest create_quest = 2;
+        RemoveRequest remove_quest = 3;
+        ReNameRequest rename_quest = 4;
+        CopyRequest   copy_quest   = 5;
+    }
+}
+
+message CreateRequest{
+    string root_path = 1;
+    string name = 2;
+}
+message RemoveRequest{
+    string root_path = 1;
+    string name = 2;
+}
+
+message MergeChunkRequest{
+    string file_id = 1;
+}
+
+message ReNameRequest{
+    string root_path = 1;
+    string old_name = 2;
+    string new_name = 3;
+}
+message CopyRequest{
+    string old_root_path = 1;
+    string old_name = 2;
+    string new_root_path = 3;
+    string new_name = 4;
+}
+
+message UploadFileResponse{
+	OperationResponse status = 1;
+	string file_id = 2;
+}
+
+message FindFileRequest{
+	string file_name = 1;
+    optional string root_path = 2;
+}
+
+// 文件分块消息
+message FileChunk {
+  bytes content = 1;         // 文件块二进制数据
+  string file_id = 2;        // 文件唯一标识
+  int32 index = 3;          // 当前块偏移量（用于断点续传）
+}
+
+// 上传状态反馈
+message UploadStatus {
+  OperationResponse status = 1;
+  map<int32,bool> chunk_status = 2; //上传块情况
+}
+
+// 文件请求参数
+message FileRequest {
+  string file_id = 1;
+  optional int32 index = 2; // 下载起始偏移量（断点续传）
+}
+
+
+
+// 文件元数据定义
+message FileMetadata {
+
+  string file_id = 1;  
+  // 文件基础元数据
+  string file_name = 2;            // 原始文件名（参考网页4测试用例）
+  int64 file_size = 3;             // 文件总大小（单位：字节）
+  string parent_path = 4;            // 文件存在的目录
+  
+  // 扩展字段
+  map<string, string> extensions = 5; // 自定义元数据（如标签）
+}
+
+// 通用操作响应
+message OperationResponse {
+  bool success = 1;
+  optional string extensions = 2;
+  optional string error_detail = 3;
+}
