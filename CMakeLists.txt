@@ -11,6 +11,7 @@ find_package(protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(jwt-cpp CONFIG REQUIRED)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/proto")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src/Service")
@@ -30,5 +31,7 @@ add_executable(Main
 target_link_libraries(Main PRIVATE gRPC::grpc++ gRPC::grpc++_reflection gRPC::gpr gRPC::grpc gRPC::grpc++ protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite)
 target_link_libraries(Main PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 target_link_libraries(Main PRIVATE spdlog::spdlog)
+target_link_libraries(Main PRIVATE jwt-cpp::jwt-cpp)
 
+add_subdirectory(tests)
 #add_test(AllTestsInMain main)

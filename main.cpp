@@ -7,9 +7,9 @@ int main()
     std::filesystem::create_directory("./data");
     std::filesystem::create_directory("./data/tmp");
     std::filesystem::create_directory("./data/save");
-    std::string server_address("0.0.0.0:8888");
+    std::string server_address("localhost:8888");
 
-    ServerBuilder builder;
+    grpc::ServerBuilder builder;
     FileServer service;
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);

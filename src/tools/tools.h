@@ -4,6 +4,7 @@
 #include <openssl/md5.h>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 #include <sstream>
 #include <iomanip>
 #include <spdlog/spdlog.h>
@@ -11,10 +12,13 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/async.h>
 
+
 #define LOG_INFO(X) tools::logger::Get().Info(X)
 #define LOG_WARNING(X) tools::logger::Get().Warning(X)
 #define LOG_ERROR(X) tools::logger::Get().Error(X)
 #define LOG_DEBUG(X) tools::logger::Get().Debug(X)
+
+#define DATA_PATH "./data"
 
 namespace tools {
 
