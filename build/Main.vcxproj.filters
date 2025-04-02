@@ -19,6 +19,18 @@
     <ClCompile Include="D:\Project\FileDatamanager\src\FileOperation\FileOperation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Project\FileDatamanager\src\tools\tools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\FileDatamanager\src\FileOperation\FileDirTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\FileDatamanager\src\Service\AuthServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\FileDatamanager\src\User\UserCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\Project\FileDatamanager\src\Service\FileServer.h">
@@ -28,6 +40,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\Project\FileDatamanager\src\FileOperation\FileOperation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\FileDatamanager\src\tools\tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\FileDatamanager\src\FileOperation\FileDirTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\FileDatamanager\src\Service\AuthServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\FileDatamanager\src\User\UserCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

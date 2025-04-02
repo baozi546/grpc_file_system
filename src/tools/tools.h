@@ -13,10 +13,16 @@
 #include <spdlog/async.h>
 
 
-#define LOG_INFO(X) tools::logger::Get().Info(X)
-#define LOG_WARNING(X) tools::logger::Get().Warning(X)
-#define LOG_ERROR(X) tools::logger::Get().Error(X)
-#define LOG_DEBUG(X) tools::logger::Get().Debug(X)
+//#define LOG_INFO(X) tools::logger::Get().Info(X)
+//#define LOG_WARNING(X) tools::logger::Get().Warning(X)
+//#define LOG_ERROR(X) tools::logger::Get().Error(X)
+//#define LOG_DEBUG(X) tools::logger::Get().Debug(X)
+
+
+#define LOG_INFO(X) std::cout << "[INFO]" << X << std::endl;
+#define LOG_WARNING(X) std::cout << "[WARNING]" << X << std::endl;
+#define LOG_ERROR(X) std::cout << "[ERROR]" << X << std::endl;
+#define LOG_DEBUG(X) std::cout << "[DEBUG]" << X << std::endl;
 
 #define DATA_PATH "./data"
 

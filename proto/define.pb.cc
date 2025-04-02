@@ -223,34 +223,6 @@ struct MergeChunkRequestDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MergeChunkRequestDefaultTypeInternal _MergeChunkRequest_default_instance_;
 
-inline constexpr LoginResponse::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : token_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        expires_in_{::int64_t{0}},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR LoginResponse::LoginResponse(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct LoginResponseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR LoginResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~LoginResponseDefaultTypeInternal() {}
-  union {
-    LoginResponse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LoginResponseDefaultTypeInternal _LoginResponse_default_instance_;
-
 inline constexpr LoginRequest::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : username_(
@@ -587,16 +559,6 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::file_system::LoginRequest, _impl_.username_),
         PROTOBUF_FIELD_OFFSET(::file_system::LoginRequest, _impl_.password_),
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::file_system::LoginResponse, _internal_metadata_),
-        ~0u,  // no _extensions_
-        ~0u,  // no _oneof_case_
-        ~0u,  // no _weak_field_map_
-        ~0u,  // no _inlined_string_donated_
-        ~0u,  // no _split_
-        ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::file_system::LoginResponse, _impl_.token_),
-        PROTOBUF_FIELD_OFFSET(::file_system::LoginResponse, _impl_.expires_in_),
-        ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::file_system::PermissionRequest, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
@@ -797,28 +759,26 @@ const ::uint32_t
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, -1, -1, sizeof(::file_system::LoginRequest)},
-        {10, -1, -1, sizeof(::file_system::LoginResponse)},
-        {20, -1, -1, sizeof(::file_system::PermissionRequest)},
-        {30, -1, -1, sizeof(::file_system::PermissionResponse)},
-        {40, -1, -1, sizeof(::file_system::FileOperationRequest)},
-        {54, -1, -1, sizeof(::file_system::CreateRequest)},
-        {64, -1, -1, sizeof(::file_system::RemoveRequest)},
-        {74, -1, -1, sizeof(::file_system::MergeChunkRequest)},
-        {83, -1, -1, sizeof(::file_system::ReNameRequest)},
-        {94, -1, -1, sizeof(::file_system::CopyRequest)},
-        {106, 116, -1, sizeof(::file_system::UploadFileResponse)},
-        {118, 128, -1, sizeof(::file_system::FindFileRequest)},
-        {130, -1, -1, sizeof(::file_system::FileChunk)},
-        {141, 151, -1, sizeof(::file_system::UploadStatus_ChunkStatusEntry_DoNotUse)},
-        {153, 163, -1, sizeof(::file_system::UploadStatus)},
-        {165, 175, -1, sizeof(::file_system::FileRequest)},
-        {177, 187, -1, sizeof(::file_system::FileMetadata_ExtensionsEntry_DoNotUse)},
-        {189, -1, -1, sizeof(::file_system::FileMetadata)},
-        {202, 213, -1, sizeof(::file_system::OperationResponse)},
+        {10, -1, -1, sizeof(::file_system::PermissionRequest)},
+        {20, -1, -1, sizeof(::file_system::PermissionResponse)},
+        {30, -1, -1, sizeof(::file_system::FileOperationRequest)},
+        {44, -1, -1, sizeof(::file_system::CreateRequest)},
+        {54, -1, -1, sizeof(::file_system::RemoveRequest)},
+        {64, -1, -1, sizeof(::file_system::MergeChunkRequest)},
+        {73, -1, -1, sizeof(::file_system::ReNameRequest)},
+        {84, -1, -1, sizeof(::file_system::CopyRequest)},
+        {96, 106, -1, sizeof(::file_system::UploadFileResponse)},
+        {108, 118, -1, sizeof(::file_system::FindFileRequest)},
+        {120, -1, -1, sizeof(::file_system::FileChunk)},
+        {131, 141, -1, sizeof(::file_system::UploadStatus_ChunkStatusEntry_DoNotUse)},
+        {143, 153, -1, sizeof(::file_system::UploadStatus)},
+        {155, 165, -1, sizeof(::file_system::FileRequest)},
+        {167, 177, -1, sizeof(::file_system::FileMetadata_ExtensionsEntry_DoNotUse)},
+        {179, -1, -1, sizeof(::file_system::FileMetadata)},
+        {192, 203, -1, sizeof(::file_system::OperationResponse)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::file_system::_LoginRequest_default_instance_._instance,
-    &::file_system::_LoginResponse_default_instance_._instance,
     &::file_system::_PermissionRequest_default_instance_._instance,
     &::file_system::_PermissionResponse_default_instance_._instance,
     &::file_system::_FileOperationRequest_default_instance_._instance,
@@ -841,77 +801,76 @@ const char descriptor_table_protodef_define_2eproto[] ABSL_ATTRIBUTE_SECTION_VAR
     protodesc_cold) = {
     "\n\014define.proto\022\013file_system\"2\n\014LoginRequ"
     "est\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\""
-    "2\n\rLoginResponse\022\r\n\005token\030\001 \001(\t\022\022\n\nexpir"
-    "es_in\030\002 \001(\003\":\n\021PermissionRequest\022\025\n\rreso"
-    "urce_path\030\001 \001(\t\022\016\n\006action\030\002 \001(\t\"5\n\022Permi"
-    "ssionResponse\022\017\n\007allowed\030\001 \001(\010\022\016\n\006reason"
-    "\030\002 \001(\t\"\233\002\n\024FileOperationRequest\022,\n\004type\030"
-    "\001 \001(\0162\036.file_system.FileOperationType\0222\n"
-    "\014create_quest\030\002 \001(\0132\032.file_system.Create"
-    "RequestH\000\0222\n\014remove_quest\030\003 \001(\0132\032.file_s"
-    "ystem.RemoveRequestH\000\0222\n\014rename_quest\030\004 "
-    "\001(\0132\032.file_system.ReNameRequestH\000\022.\n\ncop"
-    "y_quest\030\005 \001(\0132\030.file_system.CopyRequestH"
-    "\000B\t\n\007request\"0\n\rCreateRequest\022\021\n\troot_pa"
-    "th\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"0\n\rRemoveRequest\022"
-    "\021\n\troot_path\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"$\n\021Merg"
-    "eChunkRequest\022\017\n\007file_id\030\001 \001(\t\"F\n\rReName"
-    "Request\022\021\n\troot_path\030\001 \001(\t\022\020\n\010old_name\030\002"
-    " \001(\t\022\020\n\010new_name\030\003 \001(\t\"_\n\013CopyRequest\022\025\n"
-    "\rold_root_path\030\001 \001(\t\022\020\n\010old_name\030\002 \001(\t\022\025"
-    "\n\rnew_root_path\030\003 \001(\t\022\020\n\010new_name\030\004 \001(\t\""
-    "U\n\022UploadFileResponse\022.\n\006status\030\001 \001(\0132\036."
-    "file_system.OperationResponse\022\017\n\007file_id"
-    "\030\002 \001(\t\"J\n\017FindFileRequest\022\021\n\tfile_name\030\001"
-    " \001(\t\022\026\n\troot_path\030\002 \001(\tH\000\210\001\001B\014\n\n_root_pa"
-    "th\"<\n\tFileChunk\022\017\n\007content\030\001 \001(\014\022\017\n\007file"
-    "_id\030\002 \001(\t\022\r\n\005index\030\003 \001(\005\"\264\001\n\014UploadStatu"
-    "s\022.\n\006status\030\001 \001(\0132\036.file_system.Operatio"
-    "nResponse\022@\n\014chunk_status\030\002 \003(\0132*.file_s"
-    "ystem.UploadStatus.ChunkStatusEntry\0322\n\020C"
-    "hunkStatusEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 "
-    "\001(\010:\0028\001\"<\n\013FileRequest\022\017\n\007file_id\030\001 \001(\t\022"
-    "\022\n\005index\030\002 \001(\005H\000\210\001\001B\010\n\006_index\"\314\001\n\014FileMe"
-    "tadata\022\017\n\007file_id\030\001 \001(\t\022\021\n\tfile_name\030\002 \001"
-    "(\t\022\021\n\tfile_size\030\003 \001(\003\022\023\n\013parent_path\030\004 \001"
-    "(\t\022=\n\nextensions\030\005 \003(\0132).file_system.Fil"
-    "eMetadata.ExtensionsEntry\0321\n\017ExtensionsE"
-    "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"x\n\021"
-    "OperationResponse\022\017\n\007success\030\001 \001(\010\022\027\n\nex"
-    "tensions\030\002 \001(\tH\000\210\001\001\022\031\n\014error_detail\030\003 \001("
-    "\tH\001\210\001\001B\r\n\013_extensionsB\017\n\r_error_detail*A"
-    "\n\021FileOperationType\022\n\n\006CREATE\020\000\022\n\n\006REMOV"
-    "E\020\001\022\n\n\006RENAME\020\002\022\010\n\004COPY\020\0032\241\001\n\013AuthServic"
-    "e\022>\n\005Login\022\031.file_system.LoginRequest\032\032."
-    "file_system.LoginResponse\022R\n\017CheckPermis"
-    "sion\022\036.file_system.PermissionRequest\032\037.f"
-    "ile_system.PermissionResponse2\233\004\n\013FileSe"
-    "rvice\022R\n\rFileOperation\022!.file_system.Fil"
-    "eOperationRequest\032\036.file_system.Operatio"
-    "nResponse\022O\n\021UploadFileRequest\022\031.file_sy"
-    "stem.FileMetadata\032\037.file_system.UploadFi"
-    "leResponse\022A\n\nUploadFile\022\026.file_system.F"
-    "ileChunk\032\031.file_system.UploadStatus(\001\022B\n"
-    "\014DownloadFile\022\030.file_system.FileRequest\032"
-    "\026.file_system.FileChunk0\001\022I\n\021CheckUpload"
-    "Status\022\031.file_system.FileMetadata\032\031.file"
-    "_system.UploadStatus\022N\n\021MergeChunkReques"
-    "t\022\031.file_system.FileMetadata\032\036.file_syst"
-    "em.OperationResponse\022E\n\010FindFile\022\034.file_"
-    "system.FindFileRequest\032\031.file_system.Fil"
-    "eMetadata0\001b\006proto3"
+    ":\n\021PermissionRequest\022\025\n\rresource_path\030\001 "
+    "\001(\t\022\016\n\006action\030\002 \001(\t\"5\n\022PermissionRespons"
+    "e\022\017\n\007allowed\030\001 \001(\010\022\016\n\006reason\030\002 \001(\t\"\233\002\n\024F"
+    "ileOperationRequest\022,\n\004type\030\001 \001(\0162\036.file"
+    "_system.FileOperationType\0222\n\014create_ques"
+    "t\030\002 \001(\0132\032.file_system.CreateRequestH\000\0222\n"
+    "\014remove_quest\030\003 \001(\0132\032.file_system.Remove"
+    "RequestH\000\0222\n\014rename_quest\030\004 \001(\0132\032.file_s"
+    "ystem.ReNameRequestH\000\022.\n\ncopy_quest\030\005 \001("
+    "\0132\030.file_system.CopyRequestH\000B\t\n\007request"
+    "\"0\n\rCreateRequest\022\021\n\troot_path\030\001 \001(\t\022\014\n\004"
+    "name\030\002 \001(\t\"0\n\rRemoveRequest\022\021\n\troot_path"
+    "\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\"$\n\021MergeChunkReques"
+    "t\022\017\n\007file_id\030\001 \001(\t\"F\n\rReNameRequest\022\021\n\tr"
+    "oot_path\030\001 \001(\t\022\020\n\010old_name\030\002 \001(\t\022\020\n\010new_"
+    "name\030\003 \001(\t\"_\n\013CopyRequest\022\025\n\rold_root_pa"
+    "th\030\001 \001(\t\022\020\n\010old_name\030\002 \001(\t\022\025\n\rnew_root_p"
+    "ath\030\003 \001(\t\022\020\n\010new_name\030\004 \001(\t\"U\n\022UploadFil"
+    "eResponse\022.\n\006status\030\001 \001(\0132\036.file_system."
+    "OperationResponse\022\017\n\007file_id\030\002 \001(\t\"J\n\017Fi"
+    "ndFileRequest\022\021\n\tfile_name\030\001 \001(\t\022\026\n\troot"
+    "_path\030\002 \001(\tH\000\210\001\001B\014\n\n_root_path\"<\n\tFileCh"
+    "unk\022\017\n\007content\030\001 \001(\014\022\017\n\007file_id\030\002 \001(\t\022\r\n"
+    "\005index\030\003 \001(\005\"\264\001\n\014UploadStatus\022.\n\006status\030"
+    "\001 \001(\0132\036.file_system.OperationResponse\022@\n"
+    "\014chunk_status\030\002 \003(\0132*.file_system.Upload"
+    "Status.ChunkStatusEntry\0322\n\020ChunkStatusEn"
+    "try\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\010:\0028\001\"<\n\013F"
+    "ileRequest\022\017\n\007file_id\030\001 \001(\t\022\022\n\005index\030\002 \001"
+    "(\005H\000\210\001\001B\010\n\006_index\"\314\001\n\014FileMetadata\022\017\n\007fi"
+    "le_id\030\001 \001(\t\022\021\n\tfile_name\030\002 \001(\t\022\021\n\tfile_s"
+    "ize\030\003 \001(\003\022\023\n\013parent_path\030\004 \001(\t\022=\n\nextens"
+    "ions\030\005 \003(\0132).file_system.FileMetadata.Ex"
+    "tensionsEntry\0321\n\017ExtensionsEntry\022\013\n\003key\030"
+    "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"x\n\021OperationRes"
+    "ponse\022\017\n\007success\030\001 \001(\010\022\027\n\nextensions\030\002 \001"
+    "(\tH\000\210\001\001\022\031\n\014error_detail\030\003 \001(\tH\001\210\001\001B\r\n\013_e"
+    "xtensionsB\017\n\r_error_detail*A\n\021FileOperat"
+    "ionType\022\n\n\006CREATE\020\000\022\n\n\006REMOVE\020\001\022\n\n\006RENAM"
+    "E\020\002\022\010\n\004COPY\020\0032\245\001\n\013AuthService\022B\n\005Login\022\031"
+    ".file_system.LoginRequest\032\036.file_system."
+    "OperationResponse\022R\n\017CheckPermission\022\036.f"
+    "ile_system.PermissionRequest\032\037.file_syst"
+    "em.PermissionResponse2\233\004\n\013FileService\022R\n"
+    "\rFileOperation\022!.file_system.FileOperati"
+    "onRequest\032\036.file_system.OperationRespons"
+    "e\022O\n\021UploadFileRequest\022\031.file_system.Fil"
+    "eMetadata\032\037.file_system.UploadFileRespon"
+    "se\022A\n\nUploadFile\022\026.file_system.FileChunk"
+    "\032\031.file_system.UploadStatus(\001\022B\n\014Downloa"
+    "dFile\022\030.file_system.FileRequest\032\026.file_s"
+    "ystem.FileChunk0\001\022I\n\021CheckUploadStatus\022\031"
+    ".file_system.FileMetadata\032\031.file_system."
+    "UploadStatus\022N\n\021MergeChunkRequest\022\031.file"
+    "_system.FileMetadata\032\036.file_system.Opera"
+    "tionResponse\022E\n\010FindFile\022\034.file_system.F"
+    "indFileRequest\032\031.file_system.FileMetadat"
+    "a0\001b\006proto3"
 };
 static ::absl::once_flag descriptor_table_define_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_define_2eproto = {
     false,
     false,
-    2419,
+    2371,
     descriptor_table_protodef_define_2eproto,
     "define.proto",
     &descriptor_table_define_2eproto_once,
     nullptr,
     0,
-    19,
+    18,
     schemas,
     file_default_instances,
     TableStruct_define_2eproto::offsets,
@@ -1186,263 +1145,6 @@ void LoginRequest::InternalSwap(LoginRequest* PROTOBUF_RESTRICT other) {
 }
 
 ::google::protobuf::Metadata LoginRequest::GetMetadata() const {
-  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
-}
-// ===================================================================
-
-class LoginResponse::_Internal {
- public:
-};
-
-LoginResponse::LoginResponse(::google::protobuf::Arena* arena)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, _class_data_.base()) {
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena) {
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:file_system.LoginResponse)
-}
-inline PROTOBUF_NDEBUG_INLINE LoginResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::file_system::LoginResponse& from_msg)
-      : token_(arena, from.token_),
-        _cached_size_{0} {}
-
-LoginResponse::LoginResponse(
-    ::google::protobuf::Arena* arena,
-    const LoginResponse& from)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, _class_data_.base()) {
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena) {
-#endif  // PROTOBUF_CUSTOM_VTABLE
-  LoginResponse* const _this = this;
-  (void)_this;
-  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
-      from._internal_metadata_);
-  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.expires_in_ = from._impl_.expires_in_;
-
-  // @@protoc_insertion_point(copy_constructor:file_system.LoginResponse)
-}
-inline PROTOBUF_NDEBUG_INLINE LoginResponse::Impl_::Impl_(
-    ::google::protobuf::internal::InternalVisibility visibility,
-    ::google::protobuf::Arena* arena)
-      : token_(arena),
-        _cached_size_{0} {}
-
-inline void LoginResponse::SharedCtor(::_pb::Arena* arena) {
-  new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.expires_in_ = {};
-}
-LoginResponse::~LoginResponse() {
-  // @@protoc_insertion_point(destructor:file_system.LoginResponse)
-  SharedDtor(*this);
-}
-inline void LoginResponse::SharedDtor(MessageLite& self) {
-  LoginResponse& this_ = static_cast<LoginResponse&>(self);
-  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
-  ABSL_DCHECK(this_.GetArena() == nullptr);
-  this_._impl_.token_.Destroy();
-  this_._impl_.~Impl_();
-}
-
-inline void* LoginResponse::PlacementNew_(const void*, void* mem,
-                                        ::google::protobuf::Arena* arena) {
-  return ::new (mem) LoginResponse(arena);
-}
-constexpr auto LoginResponse::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(LoginResponse),
-                                            alignof(LoginResponse));
-}
-PROTOBUF_CONSTINIT
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::google::protobuf::internal::ClassDataFull LoginResponse::_class_data_ = {
-    ::google::protobuf::internal::ClassData{
-        &_LoginResponse_default_instance_._instance,
-        &_table_.header,
-        nullptr,  // OnDemandRegisterArenaDtor
-        nullptr,  // IsInitialized
-        &LoginResponse::MergeImpl,
-        ::google::protobuf::Message::GetNewImpl<LoginResponse>(),
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-        &LoginResponse::SharedDtor,
-        ::google::protobuf::Message::GetClearImpl<LoginResponse>(), &LoginResponse::ByteSizeLong,
-            &LoginResponse::_InternalSerialize,
-#endif  // PROTOBUF_CUSTOM_VTABLE
-        PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_._cached_size_),
-        false,
-    },
-    &LoginResponse::kDescriptorMethods,
-    &descriptor_table_define_2eproto,
-    nullptr,  // tracker
-};
-const ::google::protobuf::internal::ClassData* LoginResponse::GetClassData() const {
-  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
-  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
-  return _class_data_.base();
-}
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 39, 2> LoginResponse::_table_ = {
-  {
-    0,  // no _has_bits_
-    0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    _class_data_.base(),
-    nullptr,  // post_loop_handler
-    ::_pbi::TcParser::GenericFallback,  // fallback
-    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::file_system::LoginResponse>(),  // to_prefetch
-    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-  }, {{
-    // int64 expires_in = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(LoginResponse, _impl_.expires_in_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.expires_in_)}},
-    // string token = 1;
-    {::_pbi::TcParser::FastUS1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.token_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // string token = 1;
-    {PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.token_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // int64 expires_in = 2;
-    {PROTOBUF_FIELD_OFFSET(LoginResponse, _impl_.expires_in_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
-  }},
-  // no aux_entries
-  {{
-    "\31\5\0\0\0\0\0\0"
-    "file_system.LoginResponse"
-    "token"
-  }},
-};
-
-PROTOBUF_NOINLINE void LoginResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:file_system.LoginResponse)
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  ::uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.token_.ClearToEmpty();
-  _impl_.expires_in_ = ::int64_t{0};
-  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
-}
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::uint8_t* LoginResponse::_InternalSerialize(
-            const MessageLite& base, ::uint8_t* target,
-            ::google::protobuf::io::EpsCopyOutputStream* stream) {
-          const LoginResponse& this_ = static_cast<const LoginResponse&>(base);
-#else   // PROTOBUF_CUSTOM_VTABLE
-        ::uint8_t* LoginResponse::_InternalSerialize(
-            ::uint8_t* target,
-            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-          const LoginResponse& this_ = *this;
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(serialize_to_array_start:file_system.LoginResponse)
-          ::uint32_t cached_has_bits = 0;
-          (void)cached_has_bits;
-
-          // string token = 1;
-          if (!this_._internal_token().empty()) {
-            const std::string& _s = this_._internal_token();
-            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "file_system.LoginResponse.token");
-            target = stream->WriteStringMaybeAliased(1, _s, target);
-          }
-
-          // int64 expires_in = 2;
-          if (this_._internal_expires_in() != 0) {
-            target = ::google::protobuf::internal::WireFormatLite::
-                WriteInt64ToArrayWithField<2>(
-                    stream, this_._internal_expires_in(), target);
-          }
-
-          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
-            target =
-                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
-          }
-          // @@protoc_insertion_point(serialize_to_array_end:file_system.LoginResponse)
-          return target;
-        }
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::size_t LoginResponse::ByteSizeLong(const MessageLite& base) {
-          const LoginResponse& this_ = static_cast<const LoginResponse&>(base);
-#else   // PROTOBUF_CUSTOM_VTABLE
-        ::size_t LoginResponse::ByteSizeLong() const {
-          const LoginResponse& this_ = *this;
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(message_byte_size_start:file_system.LoginResponse)
-          ::size_t total_size = 0;
-
-          ::uint32_t cached_has_bits = 0;
-          // Prevent compiler warnings about cached_has_bits being unused
-          (void)cached_has_bits;
-
-          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
-           {
-            // string token = 1;
-            if (!this_._internal_token().empty()) {
-              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_token());
-            }
-            // int64 expires_in = 2;
-            if (this_._internal_expires_in() != 0) {
-              total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
-                  this_._internal_expires_in());
-            }
-          }
-          return this_.MaybeComputeUnknownFieldsSize(total_size,
-                                                     &this_._impl_._cached_size_);
-        }
-
-void LoginResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<LoginResponse*>(&to_msg);
-  auto& from = static_cast<const LoginResponse&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:file_system.LoginResponse)
-  ABSL_DCHECK_NE(&from, _this);
-  ::uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (!from._internal_token().empty()) {
-    _this->_internal_set_token(from._internal_token());
-  }
-  if (from._internal_expires_in() != 0) {
-    _this->_impl_.expires_in_ = from._impl_.expires_in_;
-  }
-  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void LoginResponse::CopyFrom(const LoginResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:file_system.LoginResponse)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-
-void LoginResponse::InternalSwap(LoginResponse* PROTOBUF_RESTRICT other) {
-  using std::swap;
-  auto* arena = GetArena();
-  ABSL_DCHECK_EQ(arena, other->GetArena());
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.token_, &other->_impl_.token_, arena);
-        swap(_impl_.expires_in_, other->_impl_.expires_in_);
-}
-
-::google::protobuf::Metadata LoginResponse::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================

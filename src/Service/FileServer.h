@@ -9,6 +9,7 @@
 #include "FileDetail.h"
 #include <map>
 #include <mutex>
+#include "UserCheck.h"
 
 using grpc::Server;
 //using grpc::ServerBuilder;
@@ -20,7 +21,7 @@ class FileServer final : public file_system::FileService::Service{
 public:
     FileServer();
     void Read_Dir_Config(); //读取配置文件
-
+    void Set_UserCheck(std::shared_ptr<UserCheck> userCheck);
 protected:
     // 一元 RPC：文件操作
     virtual ::grpc::Status FileOperation(
@@ -77,6 +78,7 @@ protected:
     
 
 private:
+    std::shared_ptr<UserCheck> m_userCheck;
     std::map<std::string, std::shared_ptr<FileDetail>> File_Queue;//上传和下载都会被加入到该队列中 防止误操作
     std::mutex                        File_Queue_Mutex;
 };

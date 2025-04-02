@@ -83,9 +83,6 @@ extern FindFileRequestDefaultTypeInternal _FindFileRequest_default_instance_;
 class LoginRequest;
 struct LoginRequestDefaultTypeInternal;
 extern LoginRequestDefaultTypeInternal _LoginRequest_default_instance_;
-class LoginResponse;
-struct LoginResponseDefaultTypeInternal;
-extern LoginResponseDefaultTypeInternal _LoginResponse_default_instance_;
 class MergeChunkRequest;
 struct MergeChunkRequestDefaultTypeInternal;
 extern MergeChunkRequestDefaultTypeInternal _MergeChunkRequest_default_instance_;
@@ -259,7 +256,7 @@ class RemoveRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const RemoveRequest*>(
         &_RemoveRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 6;
+  static constexpr int kIndexInFileMessages = 5;
   friend void swap(RemoveRequest& a, RemoveRequest& b) { a.Swap(&b); }
   inline void Swap(RemoveRequest* other) {
     if (other == this) return;
@@ -473,7 +470,7 @@ class ReNameRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const ReNameRequest*>(
         &_ReNameRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 8;
+  static constexpr int kIndexInFileMessages = 7;
   friend void swap(ReNameRequest& a, ReNameRequest& b) { a.Swap(&b); }
   inline void Swap(ReNameRequest* other) {
     if (other == this) return;
@@ -705,7 +702,7 @@ class PermissionResponse final : public ::google::protobuf::Message
     return reinterpret_cast<const PermissionResponse*>(
         &_PermissionResponse_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 3;
+  static constexpr int kIndexInFileMessages = 2;
   friend void swap(PermissionResponse& a, PermissionResponse& b) { a.Swap(&b); }
   inline void Swap(PermissionResponse* other) {
     if (other == this) return;
@@ -913,7 +910,7 @@ class PermissionRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const PermissionRequest*>(
         &_PermissionRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 2;
+  static constexpr int kIndexInFileMessages = 1;
   friend void swap(PermissionRequest& a, PermissionRequest& b) { a.Swap(&b); }
   inline void Swap(PermissionRequest* other) {
     if (other == this) return;
@@ -1127,7 +1124,7 @@ class OperationResponse final : public ::google::protobuf::Message
     return reinterpret_cast<const OperationResponse*>(
         &_OperationResponse_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 18;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(OperationResponse& a, OperationResponse& b) { a.Swap(&b); }
   inline void Swap(OperationResponse* other) {
     if (other == this) return;
@@ -1356,7 +1353,7 @@ class MergeChunkRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const MergeChunkRequest*>(
         &_MergeChunkRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 7;
+  static constexpr int kIndexInFileMessages = 6;
   friend void swap(MergeChunkRequest& a, MergeChunkRequest& b) { a.Swap(&b); }
   inline void Swap(MergeChunkRequest* other) {
     if (other == this) return;
@@ -1485,214 +1482,6 @@ class MergeChunkRequest final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const MergeChunkRequest& from_msg);
     ::google::protobuf::internal::ArenaStringPtr file_id_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_define_2eproto;
-};
-// -------------------------------------------------------------------
-
-class LoginResponse final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:file_system.LoginResponse) */ {
- public:
-  inline LoginResponse() : LoginResponse(nullptr) {}
-  ~LoginResponse() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(LoginResponse* msg, std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(LoginResponse));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR LoginResponse(
-      ::google::protobuf::internal::ConstantInitialized);
-
-  inline LoginResponse(const LoginResponse& from) : LoginResponse(nullptr, from) {}
-  inline LoginResponse(LoginResponse&& from) noexcept
-      : LoginResponse(nullptr, std::move(from)) {}
-  inline LoginResponse& operator=(const LoginResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline LoginResponse& operator=(LoginResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const LoginResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const LoginResponse* internal_default_instance() {
-    return reinterpret_cast<const LoginResponse*>(
-        &_LoginResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 1;
-  friend void swap(LoginResponse& a, LoginResponse& b) { a.Swap(&b); }
-  inline void Swap(LoginResponse* other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(LoginResponse* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  LoginResponse* New(::google::protobuf::Arena* arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<LoginResponse>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const LoginResponse& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const LoginResponse& from) { LoginResponse::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(
-      ::google::protobuf::MessageLite& to_msg,
-      const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* _InternalSerialize(
-      const MessageLite& msg, ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(LoginResponse* other);
- private:
-  template <typename T>
-  friend ::absl::string_view(
-      ::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "file_system.LoginResponse"; }
-
- protected:
-  explicit LoginResponse(::google::protobuf::Arena* arena);
-  LoginResponse(::google::protobuf::Arena* arena, const LoginResponse& from);
-  LoginResponse(::google::protobuf::Arena* arena, LoginResponse&& from) noexcept
-      : LoginResponse(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
-  static void* PlacementNew_(const void*, void* mem,
-                             ::google::protobuf::Arena* arena);
-  static constexpr auto InternalNewImpl_();
-  static const ::google::protobuf::internal::ClassDataFull _class_data_;
-
- public:
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kTokenFieldNumber = 1,
-    kExpiresInFieldNumber = 2,
-  };
-  // string token = 1;
-  void clear_token() ;
-  const std::string& token() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_token(Arg_&& arg, Args_... args);
-  std::string* mutable_token();
-  PROTOBUF_NODISCARD std::string* release_token();
-  void set_allocated_token(std::string* value);
-
-  private:
-  const std::string& _internal_token() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_token(
-      const std::string& value);
-  std::string* _internal_mutable_token();
-
-  public:
-  // int64 expires_in = 2;
-  void clear_expires_in() ;
-  ::int64_t expires_in() const;
-  void set_expires_in(::int64_t value);
-
-  private:
-  ::int64_t _internal_expires_in() const;
-  void _internal_set_expires_in(::int64_t value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:file_system.LoginResponse)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
-      39, 2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(
-        ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena);
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena, const Impl_& from,
-                          const LoginResponse& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr token_;
-    ::int64_t expires_in_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1974,7 +1763,7 @@ class FindFileRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const FindFileRequest*>(
         &_FindFileRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 11;
+  static constexpr int kIndexInFileMessages = 10;
   friend void swap(FindFileRequest& a, FindFileRequest& b) { a.Swap(&b); }
   inline void Swap(FindFileRequest* other) {
     if (other == this) return;
@@ -2190,7 +1979,7 @@ class FileRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const FileRequest*>(
         &_FileRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 15;
+  static constexpr int kIndexInFileMessages = 14;
   friend void swap(FileRequest& a, FileRequest& b) { a.Swap(&b); }
   inline void Swap(FileRequest* other) {
     if (other == this) return;
@@ -2439,7 +2228,7 @@ class FileChunk final : public ::google::protobuf::Message
     return reinterpret_cast<const FileChunk*>(
         &_FileChunk_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 12;
+  static constexpr int kIndexInFileMessages = 11;
   friend void swap(FileChunk& a, FileChunk& b) { a.Swap(&b); }
   inline void Swap(FileChunk* other) {
     if (other == this) return;
@@ -2665,7 +2454,7 @@ class CreateRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const CreateRequest*>(
         &_CreateRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 5;
+  static constexpr int kIndexInFileMessages = 4;
   friend void swap(CreateRequest& a, CreateRequest& b) { a.Swap(&b); }
   inline void Swap(CreateRequest* other) {
     if (other == this) return;
@@ -2879,7 +2668,7 @@ class CopyRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const CopyRequest*>(
         &_CopyRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 9;
+  static constexpr int kIndexInFileMessages = 8;
   friend void swap(CopyRequest& a, CopyRequest& b) { a.Swap(&b); }
   inline void Swap(CopyRequest* other) {
     if (other == this) return;
@@ -3129,7 +2918,7 @@ class UploadStatus final : public ::google::protobuf::Message
     return reinterpret_cast<const UploadStatus*>(
         &_UploadStatus_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 13;
   friend void swap(UploadStatus& a, UploadStatus& b) { a.Swap(&b); }
   inline void Swap(UploadStatus* other) {
     if (other == this) return;
@@ -3345,7 +3134,7 @@ class UploadFileResponse final : public ::google::protobuf::Message
     return reinterpret_cast<const UploadFileResponse*>(
         &_UploadFileResponse_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 10;
+  static constexpr int kIndexInFileMessages = 9;
   friend void swap(UploadFileResponse& a, UploadFileResponse& b) { a.Swap(&b); }
   inline void Swap(UploadFileResponse* other) {
     if (other == this) return;
@@ -3566,7 +3355,7 @@ class FileOperationRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const FileOperationRequest*>(
         &_FileOperationRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 4;
+  static constexpr int kIndexInFileMessages = 3;
   friend void swap(FileOperationRequest& a, FileOperationRequest& b) { a.Swap(&b); }
   inline void Swap(FileOperationRequest* other) {
     if (other == this) return;
@@ -3853,7 +3642,7 @@ class FileMetadata final : public ::google::protobuf::Message
     return reinterpret_cast<const FileMetadata*>(
         &_FileMetadata_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 17;
+  static constexpr int kIndexInFileMessages = 16;
   friend void swap(FileMetadata& a, FileMetadata& b) { a.Swap(&b); }
   inline void Swap(FileMetadata* other) {
     if (other == this) return;
@@ -4167,80 +3956,6 @@ inline void LoginRequest::set_allocated_password(std::string* value) {
     _impl_.password_.Set("", GetArena());
   }
   // @@protoc_insertion_point(field_set_allocated:file_system.LoginRequest.password)
-}
-
-// -------------------------------------------------------------------
-
-// LoginResponse
-
-// string token = 1;
-inline void LoginResponse::clear_token() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.token_.ClearToEmpty();
-}
-inline const std::string& LoginResponse::token() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:file_system.LoginResponse.token)
-  return _internal_token();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void LoginResponse::set_token(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.token_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:file_system.LoginResponse.token)
-}
-inline std::string* LoginResponse::mutable_token() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_token();
-  // @@protoc_insertion_point(field_mutable:file_system.LoginResponse.token)
-  return _s;
-}
-inline const std::string& LoginResponse::_internal_token() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.token_.Get();
-}
-inline void LoginResponse::_internal_set_token(const std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.token_.Set(value, GetArena());
-}
-inline std::string* LoginResponse::_internal_mutable_token() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.token_.Mutable( GetArena());
-}
-inline std::string* LoginResponse::release_token() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:file_system.LoginResponse.token)
-  return _impl_.token_.Release();
-}
-inline void LoginResponse::set_allocated_token(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.token_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.token_.IsDefault()) {
-    _impl_.token_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:file_system.LoginResponse.token)
-}
-
-// int64 expires_in = 2;
-inline void LoginResponse::clear_expires_in() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.expires_in_ = ::int64_t{0};
-}
-inline ::int64_t LoginResponse::expires_in() const {
-  // @@protoc_insertion_point(field_get:file_system.LoginResponse.expires_in)
-  return _internal_expires_in();
-}
-inline void LoginResponse::set_expires_in(::int64_t value) {
-  _internal_set_expires_in(value);
-  // @@protoc_insertion_point(field_set:file_system.LoginResponse.expires_in)
-}
-inline ::int64_t LoginResponse::_internal_expires_in() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.expires_in_;
-}
-inline void LoginResponse::_internal_set_expires_in(::int64_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.expires_in_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -23,7 +23,7 @@ CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Too
 CMAKE_CONFIGURATION_TYPES:STRING=Debug;Release;MinSizeRel;RelWithDebInfo
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /GR /EHsc
+CMAKE_CXX_FLAGS:STRING=/DWIN32 /D_WINDOWS /EHsc
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=/Zi /Ob0 /Od /RTC1
@@ -188,6 +188,9 @@ CMAKE_TOOLCHAIN_FILE:FILEPATH=D:/Git/vcpkg/scripts/buildsystems/vcpkg.cmake
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//The directory containing a CMake configuration file for GTest.
+GTest_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/gtest
+
 //Path to a library.
 LIB_EAY_DEBUG:FILEPATH=D:/Git/vcpkg/installed/x64-windows/debug/lib/libcrypto.lib
 
@@ -285,8 +288,14 @@ absl_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/absl
 //The directory containing a CMake configuration file for c-ares.
 c-ares_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/c-ares
 
+//The directory containing a CMake configuration file for fmt.
+fmt_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/fmt
+
 //The directory containing a CMake configuration file for gRPC.
 gRPC_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/grpc
+
+//The directory containing a CMake configuration file for jwt-cpp.
+jwt-cpp_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/jwt-cpp
 
 //The directory containing a CMake configuration file for protobuf.
 protobuf_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/protobuf
@@ -299,6 +308,9 @@ protobuf_VERBOSE:BOOL=OFF
 
 //The directory containing a CMake configuration file for re2.
 re2_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/re2
+
+//The directory containing a CMake configuration file for spdlog.
+spdlog_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/spdlog
 
 //The directory containing a CMake configuration file for utf8_range.
 utf8_range_DIR:PATH=D:/Git/vcpkg/installed/x64-windows/share/utf8_range
@@ -394,7 +406,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib

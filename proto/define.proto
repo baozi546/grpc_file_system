@@ -2,21 +2,16 @@ syntax = "proto3";
 
 package file_system;
 service AuthService {
-  // 用户登录获取Token
-  rpc Login(LoginRequest) returns (LoginResponse);
+  // 用户登录获取Token.
+  rpc Login(LoginRequest) returns (OperationResponse);
   
-  // 权限验证（元数据中携带Token）
+  // 权限验证（元数据中携带Token）.
   rpc CheckPermission(PermissionRequest) returns (PermissionResponse);
 }
 
 message LoginRequest {
   string username = 1;
   string password = 2;
-}
-
-message LoginResponse {
-  string token = 1;    // JWT或OAuth2令牌
-  int64 expires_in = 2; 
 }
 
 message PermissionRequest {
@@ -42,16 +37,16 @@ service FileService {
 
   rpc UploadFileRequest(FileMetadata) returns (UploadFileResponse);
 
-  // 客户端流式上传（支持断点续传）
+  // 客户端流式上传（支持断点续传）.
   rpc UploadFile(stream FileChunk) returns (UploadStatus);
 
-  // 服务端流式下载
+  // 服务端流式下载.
   rpc DownloadFile(FileRequest) returns (stream FileChunk);
 
-  // 查询上传断点状态
+  // 查询上传断点状态.
   rpc CheckUploadStatus(FileMetadata) returns (UploadStatus);
  
-  //合并请求
+  //合并请求.
   rpc MergeChunkRequest(FileMetadata) returns (OperationResponse);
 
 
@@ -102,20 +97,20 @@ message FindFileRequest{
     optional string root_path = 2;
 }
 
-// 文件分块消息
+// 文件分块消息.
 message FileChunk {
   bytes content = 1;         // 文件块二进制数据
   string file_id = 2;        // 文件唯一标识
   int32 index = 3;          // 当前块偏移量（用于断点续传）
 }
 
-// 上传状态反馈
+// 上传状态反馈.
 message UploadStatus {
   OperationResponse status = 1;
   map<int32,bool> chunk_status = 2; //上传块情况
 }
 
-// 文件请求参数
+// 文件请求参数.
 message FileRequest {
   string file_id = 1;
   optional int32 index = 2; // 下载起始偏移量（断点续传）
@@ -123,20 +118,20 @@ message FileRequest {
 
 
 
-// 文件元数据定义
+// 文件元数据定义.
 message FileMetadata {
 
   string file_id = 1;  
-  // 文件基础元数据
+  // 文件基础元数据.
   string file_name = 2;            // 原始文件名（参考网页4测试用例）
   int64 file_size = 3;             // 文件总大小（单位：字节）
   string parent_path = 4;            // 文件存在的目录
   
-  // 扩展字段
+  // 扩展字段.
   map<string, string> extensions = 5; // 自定义元数据（如标签）
 }
 
-// 通用操作响应
+// 通用操作响应.
 message OperationResponse {
   bool success = 1;
   optional string extensions = 2;

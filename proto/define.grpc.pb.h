@@ -35,15 +35,15 @@ class AuthService final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    // 用户登录获取Token
-    virtual ::grpc::Status Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::LoginResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::LoginResponse>> AsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::LoginResponse>>(AsyncLoginRaw(context, request, cq));
+    // 用户登录获取Token.
+    virtual ::grpc::Status Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::OperationResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> AsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(AsyncLoginRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::LoginResponse>> PrepareAsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::LoginResponse>>(PrepareAsyncLoginRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> PrepareAsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(PrepareAsyncLoginRaw(context, request, cq));
     }
-    // 权限验证（元数据中携带Token）
+    // 权限验证（元数据中携带Token）.
     virtual ::grpc::Status CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::file_system::PermissionResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>> AsyncCheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>>(AsyncCheckPermissionRaw(context, request, cq));
@@ -54,10 +54,10 @@ class AuthService final {
     class async_interface {
      public:
       virtual ~async_interface() {}
-      // 用户登录获取Token
-      virtual void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // 权限验证（元数据中携带Token）
+      // 用户登录获取Token.
+      virtual void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      // 权限验证（元数据中携带Token）.
       virtual void CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
@@ -65,20 +65,20 @@ class AuthService final {
     virtual class async_interface* async() { return nullptr; }
     class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::LoginResponse>* AsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::LoginResponse>* PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>* AsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>* PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>* AsyncCheckPermissionRaw(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>* PrepareAsyncCheckPermissionRaw(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    ::grpc::Status Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::LoginResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>> AsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>>(AsyncLoginRaw(context, request, cq));
+    ::grpc::Status Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::OperationResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>> AsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>>(AsyncLoginRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>> PrepareAsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>>(PrepareAsyncLoginRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>> PrepareAsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>>(PrepareAsyncLoginRaw(context, request, cq));
     }
     ::grpc::Status CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::file_system::PermissionResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::PermissionResponse>> AsyncCheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) {
@@ -90,8 +90,8 @@ class AuthService final {
     class async final :
       public StubInterface::async_interface {
      public:
-      void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response, std::function<void(::grpc::Status)>) override;
-      void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)>) override;
+      void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       void CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response, std::function<void(::grpc::Status)>) override;
       void CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
@@ -105,8 +105,8 @@ class AuthService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>* AsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>* PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>* AsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>* PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::file_system::PermissionResponse>* AsyncCheckPermissionRaw(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::file_system::PermissionResponse>* PrepareAsyncCheckPermissionRaw(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Login_;
@@ -118,9 +118,9 @@ class AuthService final {
    public:
     Service();
     virtual ~Service();
-    // 用户登录获取Token
-    virtual ::grpc::Status Login(::grpc::ServerContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response);
-    // 权限验证（元数据中携带Token）
+    // 用户登录获取Token.
+    virtual ::grpc::Status Login(::grpc::ServerContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response);
+    // 权限验证（元数据中携带Token）.
     virtual ::grpc::Status CheckPermission(::grpc::ServerContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response);
   };
   template <class BaseClass>
@@ -135,11 +135,11 @@ class AuthService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/) override {
+    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestLogin(::grpc::ServerContext* context, ::file_system::LoginRequest* request, ::grpc::ServerAsyncResponseWriter< ::file_system::LoginResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestLogin(::grpc::ServerContext* context, ::file_system::LoginRequest* request, ::grpc::ServerAsyncResponseWriter< ::file_system::OperationResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -171,25 +171,25 @@ class AuthService final {
    public:
     WithCallbackMethod_Login() {
       ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::file_system::LoginRequest, ::file_system::LoginResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::file_system::LoginRequest, ::file_system::OperationResponse>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response) { return this->Login(context, request, response); }));}
+                   ::grpc::CallbackServerContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response) { return this->Login(context, request, response); }));}
     void SetMessageAllocatorFor_Login(
-        ::grpc::MessageAllocator< ::file_system::LoginRequest, ::file_system::LoginResponse>* allocator) {
+        ::grpc::MessageAllocator< ::file_system::LoginRequest, ::file_system::OperationResponse>* allocator) {
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::file_system::LoginRequest, ::file_system::LoginResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::file_system::LoginRequest, ::file_system::OperationResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~WithCallbackMethod_Login() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/) override {
+    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerUnaryReactor* Login(
-      ::grpc::CallbackServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
   class WithCallbackMethod_CheckPermission : public BaseClass {
@@ -232,7 +232,7 @@ class AuthService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/) override {
+    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -266,7 +266,7 @@ class AuthService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/) override {
+    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -309,7 +309,7 @@ class AuthService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/) override {
+    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -346,10 +346,10 @@ class AuthService final {
     WithStreamedUnaryMethod_Login() {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::file_system::LoginRequest, ::file_system::LoginResponse>(
+          ::file_system::LoginRequest, ::file_system::OperationResponse>(
             [this](::grpc::ServerContext* context,
                    ::grpc::ServerUnaryStreamer<
-                     ::file_system::LoginRequest, ::file_system::LoginResponse>* streamer) {
+                     ::file_system::LoginRequest, ::file_system::OperationResponse>* streamer) {
                        return this->StreamedLogin(context,
                          streamer);
                   }));
@@ -358,12 +358,12 @@ class AuthService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::LoginResponse* /*response*/) override {
+    ::grpc::Status Login(::grpc::ServerContext* /*context*/, const ::file_system::LoginRequest* /*request*/, ::file_system::OperationResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedLogin(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::file_system::LoginRequest,::file_system::LoginResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedLogin(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::file_system::LoginRequest,::file_system::OperationResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_CheckPermission : public BaseClass {
@@ -419,7 +419,7 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadFileResponse>> PrepareAsyncUploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadFileResponse>>(PrepareAsyncUploadFileRequestRaw(context, request, cq));
     }
-    // 客户端流式上传（支持断点续传）
+    // 客户端流式上传（支持断点续传）.
     std::unique_ptr< ::grpc::ClientWriterInterface< ::file_system::FileChunk>> UploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response) {
       return std::unique_ptr< ::grpc::ClientWriterInterface< ::file_system::FileChunk>>(UploadFileRaw(context, response));
     }
@@ -429,7 +429,7 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::file_system::FileChunk>> PrepareAsyncUploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::file_system::FileChunk>>(PrepareAsyncUploadFileRaw(context, response, cq));
     }
-    // 服务端流式下载
+    // 服务端流式下载.
     std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileChunk>> DownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest& request) {
       return std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileChunk>>(DownloadFileRaw(context, request));
     }
@@ -439,7 +439,7 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileChunk>> PrepareAsyncDownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileChunk>>(PrepareAsyncDownloadFileRaw(context, request, cq));
     }
-    // 查询上传断点状态
+    // 查询上传断点状态.
     virtual ::grpc::Status CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::UploadStatus* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>> AsyncCheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>>(AsyncCheckUploadStatusRaw(context, request, cq));
@@ -447,7 +447,7 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>> PrepareAsyncCheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>>(PrepareAsyncCheckUploadStatusRaw(context, request, cq));
     }
-    // 合并请求
+    // 合并请求.
     virtual ::grpc::Status MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::OperationResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> AsyncMergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(AsyncMergeChunkRequestRaw(context, request, cq));
@@ -471,14 +471,14 @@ class FileService final {
       virtual void FileOperation(::grpc::ClientContext* context, const ::file_system::FileOperationRequest* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       virtual void UploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void UploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // 客户端流式上传（支持断点续传）
+      // 客户端流式上传（支持断点续传）.
       virtual void UploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::ClientWriteReactor< ::file_system::FileChunk>* reactor) = 0;
-      // 服务端流式下载
+      // 服务端流式下载.
       virtual void DownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest* request, ::grpc::ClientReadReactor< ::file_system::FileChunk>* reactor) = 0;
-      // 查询上传断点状态
+      // 查询上传断点状态.
       virtual void CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response, std::function<void(::grpc::Status)>) = 0;
       virtual void CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // 合并请求
+      // 合并请求.
       virtual void MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       virtual void FindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest* request, ::grpc::ClientReadReactor< ::file_system::FileMetadata>* reactor) = 0;
@@ -621,13 +621,13 @@ class FileService final {
     virtual ~Service();
     virtual ::grpc::Status FileOperation(::grpc::ServerContext* context, const ::file_system::FileOperationRequest* request, ::file_system::OperationResponse* response);
     virtual ::grpc::Status UploadFileRequest(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response);
-    // 客户端流式上传（支持断点续传）
+    // 客户端流式上传（支持断点续传）.
     virtual ::grpc::Status UploadFile(::grpc::ServerContext* context, ::grpc::ServerReader< ::file_system::FileChunk>* reader, ::file_system::UploadStatus* response);
-    // 服务端流式下载
+    // 服务端流式下载.
     virtual ::grpc::Status DownloadFile(::grpc::ServerContext* context, const ::file_system::FileRequest* request, ::grpc::ServerWriter< ::file_system::FileChunk>* writer);
-    // 查询上传断点状态
+    // 查询上传断点状态.
     virtual ::grpc::Status CheckUploadStatus(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response);
-    // 合并请求
+    // 合并请求.
     virtual ::grpc::Status MergeChunkRequest(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response);
     virtual ::grpc::Status FindFile(::grpc::ServerContext* context, const ::file_system::FindFileRequest* request, ::grpc::ServerWriter< ::file_system::FileMetadata>* writer);
   };

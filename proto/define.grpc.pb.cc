@@ -37,23 +37,23 @@ AuthService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channe
   , rpcmethod_CheckPermission_(AuthService_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status AuthService::Stub::Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::LoginResponse* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::file_system::LoginRequest, ::file_system::LoginResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_Login_, context, request, response);
+::grpc::Status AuthService::Stub::Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::OperationResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::file_system::LoginRequest, ::file_system::OperationResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_Login_, context, request, response);
 }
 
-void AuthService::Stub::async::Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::file_system::LoginRequest, ::file_system::LoginResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Login_, context, request, response, std::move(f));
+void AuthService::Stub::async::Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::file_system::LoginRequest, ::file_system::OperationResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Login_, context, request, response, std::move(f));
 }
 
-void AuthService::Stub::async::Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+void AuthService::Stub::async::Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Login_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>* AuthService::Stub::PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::file_system::LoginResponse, ::file_system::LoginRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_Login_, context, request);
+::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>* AuthService::Stub::PrepareAsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::file_system::OperationResponse, ::file_system::LoginRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_Login_, context, request);
 }
 
-::grpc::ClientAsyncResponseReader< ::file_system::LoginResponse>* AuthService::Stub::AsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
+::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>* AuthService::Stub::AsyncLoginRaw(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
   auto* result =
     this->PrepareAsyncLoginRaw(context, request, cq);
   result->StartCall();
@@ -87,11 +87,11 @@ AuthService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       AuthService_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< AuthService::Service, ::file_system::LoginRequest, ::file_system::LoginResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+      new ::grpc::internal::RpcMethodHandler< AuthService::Service, ::file_system::LoginRequest, ::file_system::OperationResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](AuthService::Service* service,
              ::grpc::ServerContext* ctx,
              const ::file_system::LoginRequest* req,
-             ::file_system::LoginResponse* resp) {
+             ::file_system::OperationResponse* resp) {
                return service->Login(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
@@ -109,7 +109,7 @@ AuthService::Service::Service() {
 AuthService::Service::~Service() {
 }
 
-::grpc::Status AuthService::Service::Login(::grpc::ServerContext* context, const ::file_system::LoginRequest* request, ::file_system::LoginResponse* response) {
+::grpc::Status AuthService::Service::Login(::grpc::ServerContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response) {
   (void) context;
   (void) request;
   (void) response;
