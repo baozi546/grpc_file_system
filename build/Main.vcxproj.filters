@@ -1,69 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Project\FileDatamanager\main.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\proto\define.grpc.pb.cc">
+    <ClCompile Include="D:\Project\grpc_file_system\proto\define.grpc.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\proto\define.pb.cc">
+    <ClCompile Include="D:\Project\grpc_file_system\proto\define.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\Service\FileServer.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\Service\FileServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\FileOperation\FileDetail.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\FileOperation\FileDetail.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\FileOperation\FileOperation.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\FileOperation\FileOperation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\tools\tools.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\tools\tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\FileOperation\FileDirTree.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\FileOperation\FileDirTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\Service\AuthServer.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\Service\AuthServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\src\User\UserCheck.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\src\User\UserCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\grpc_file_system\src\Service\ServerInterceptorFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\grpc_file_system\src\tools\ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\Project\FileDatamanager\src\Service\FileServer.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\Service\FileServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\FileDatamanager\src\FileOperation\FileDetail.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\FileOperation\FileDetail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\FileDatamanager\src\FileOperation\FileOperation.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\FileOperation\FileOperation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\FileDatamanager\src\tools\tools.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\tools\tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\FileDatamanager\src\FileOperation\FileDirTree.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\FileOperation\FileDirTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\FileDatamanager\src\Service\AuthServer.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\Service\AuthServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Project\FileDatamanager\src\User\UserCheck.h">
+    <ClInclude Include="D:\Project\grpc_file_system\src\User\UserCheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\grpc_file_system\src\Service\ServerInterceptorFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\grpc_file_system\src\tools\element_define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Project\grpc_file_system\src\tools\ThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Project\FileDatamanager\CMakeLists.txt" />
+    <CustomBuild Include="D:\Project\grpc_file_system\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{39BF81F5-75F4-3DD9-92B1-CE1E73D71813}</UniqueIdentifier>
+      <UniqueIdentifier>{1D34FD8B-6C14-3926-B75B-3D75B94FDA74}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{3C508566-E1A4-3FD3-929D-49C713271AD9}</UniqueIdentifier>
+      <UniqueIdentifier>{9BAC7BB1-6A44-3C9C-AFC9-3574B47B772A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

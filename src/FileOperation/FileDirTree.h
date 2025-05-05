@@ -13,35 +13,42 @@ public:
 	enum Modify_LEVEL
 	{
 		NONE = 0,
-		CREATE = 1 << 0,
-		ADD = 1 << 1,
-		MODIFY = 1 << 2,
-		DELETE = 1 << 3
+		CREATE_DIR = 1 << 0,
+		ADD_DIR = 1 << 1,
+		MODIFY_DIR = 1 << 2,
+		DELETE_DIR = 1 << 3
 	};
 	struct FileDirTreeNode
 	{
-		std::string file_id;
+		enum FILE_TYPE {
+			DIR = 0,
+			FILE = 1
+		};
+		std::string file_id;//文件专属id
 		std::string file_name;
-		std::string owner;
-		uint64_t create_time;
-		uint64_t modify_time;
+		FILE_TYPE type;
 	};
-	FileDirTree();
-    ~FileDirTree();
-	bool Create_dir(const std::string& name, const std::string& parent_path);
-	bool Add_file(const std::string file_name,std::string &owner);
+	FileDirTree(const std::string& name);
+	~FileDirTree();
+	bool Create_dir(const std::string& name);
+	bool Add_file(const FileDirTreeNode& node);
+	bool Rename_dir(const std::string& old_name, const std::string& new_name);
+	bool Rename_file(const std::string& old_name, const std::string& new_name);
+	bool File_exist(const std::string& name, FileDirTreeNode& node);
+	bool File_exist(const std::string& name);
 	bool Remove_child(const std::string& name);
 	bool Remove_file(const std::string& name);
-	bool Find_file(const std::string& name);
-	bool Modify_file(const std::string& name,std::string &owner);
 	std::shared_ptr<FileDirTree> Get_child(const std::string& name);
+	std::vector<std::shared_ptr<FileDirTree>> Get_child_list();
+	std::vector<FileDirTreeNode> Get_File_List();
+
+	void Modify_Dir_name(const std::string& new_name);
 
 	std::string Dump_Config();
 private:
-	
-	 std::map<std::string, std::shared_ptr<FileDirTree>> m_dirs;//只存放目录
-	 std::map<std::string, FileDirTreeNode> m_file_info; //第一个为文件专属ID, 第二个为文件信息
-	 std::shared_mutex file_mutex;
 
-     std::atomic<Modify_LEVEL> Dir_Level = NONE;
-}; 
+	std::map<std::string, std::shared_ptr<FileDirTree>> m_dirs;//只存放目录
+	std::map<std::string, FileDirTreeNode> m_file_info; //第一个为文件名, 第二个为文件信息
+	std::shared_mutex file_mutex;
+	std::string dir_name;
+};

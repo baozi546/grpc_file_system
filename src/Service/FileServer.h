@@ -10,6 +10,11 @@
 #include <map>
 #include <mutex>
 #include "UserCheck.h"
+#include "FileDirTree.h"
+#include  <queue>
+#include "tools.h"
+#include "element_define.h"
+#include "ThreadPool.h"
 
 using grpc::Server;
 //using grpc::ServerBuilder;
@@ -17,11 +22,42 @@ using grpc::Server;
 //using grpc::ServerReaderWriter;
 //using grpc::Status;
 
-class FileServer final : public file_system::FileService::Service{
+class FileServer final : public file_system::FileService::Service {
 public:
     FileServer();
     void Read_Dir_Config(); //读取配置文件
-    void Set_UserCheck(std::shared_ptr<UserCheck> userCheck);
+    bool split_directory_path(const std::string& input_path, std::queue<std::string>& output);
+
+private:
+    bool File_Update_Queue_Add(const std::string username,const ::file_system::FileMetadata& metadata);//添加上传任务
+    bool File_Chunk_Write(const std::string username, const file_system::FileChunk& chunk);
+    bool File_Download_Queue_Add(const std::string username, const file_system::FileMetadata& metadata); //添加下载任务
+
+private:
+    int FileCreate(std::string username,
+        const::file_system::CreateRequest& request, ::file_system::OperationResponse* response);
+    int FileRemove(std::string username,
+        const::file_system::RemoveRequest& request, ::file_system::OperationResponse* response);
+    int FileRename(std::string username,
+        const::file_system::ReNameRequest& request, ::file_system::OperationResponse* response);
+
+    int GetFileList(std::string username, 
+        const::file_system::GetFileListRequest* request,::grpc::ServerWriter<::file_system::FileMetadata>* writer);
+    int FileFile(std::string username,
+        const ::file_system::FindFileRequest* request, ::grpc::ServerWriter<::file_system::FileMetadata>* writer);
+
+    int FileUpTaskCreate(std::string username,
+        const::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response);
+    int FileUpdateStream(std::string username,
+        ::grpc::ServerReader<::file_system::FileChunk>* reader, ::file_system::UploadStatus* response);
+    
+    int FileMergeChunk(std::string username,
+        const::file_system::FileMetadata* request, ::file_system::OperationResponse* response);
+    int FileDownTaskCreate(std::string username,
+        const::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response);
+    int FileDownloadStream(std::string username,
+        const ::file_system::FileRequest* request,::grpc::ServerWriter<::file_system::FileChunk>* writer);
+
 protected:
     // 一元 RPC：文件操作
     virtual ::grpc::Status FileOperation(
@@ -42,6 +78,12 @@ protected:
         ::grpc::ServerContext* context,
         ::grpc::ServerReader<::file_system::FileChunk>* reader,
         ::file_system::UploadStatus* response
+    );
+
+    virtual ::grpc::Status DownloadFileRequest(
+        ::grpc::ServerContext* context,
+        const ::file_system::FileMetadata* request,
+        ::file_system::DownloadFileResponse response
     );
 
     // 服务端流式下载
@@ -72,13 +114,31 @@ protected:
         ::grpc::ServerWriter<::file_system::FileMetadata>* writer
     );
 
+    virtual ::grpc::Status GetFileList(
+        ::grpc::ServerContext* context,
+        const ::file_system::GetFileListRequest* request,
+        ::grpc::ServerWriter<::file_system::FileMetadata>* writer
+    );
+
+    virtual ::grpc::Status ProgressCheck(
+        ::grpc::ServerContext* context,
+        const ::file_system::ProgressRequest* request,
+        ::file_system::ProgressRespond* response
+    );
     // type = 0为上传检测
     // type = 1为下载检测
     //bool ValidateMetadata(const file_system::FileMetadata& data, std::shared_ptr<FileDetail> detail, int type);
-    
+
 
 private:
-    std::shared_ptr<UserCheck> m_userCheck;
-    std::map<std::string, std::shared_ptr<FileDetail>> File_Queue;//上传和下载都会被加入到该队列中 防止误操作
-    std::mutex                        File_Queue_Mutex;
+    
+    TaskQueue<FileDetail> Update_File_Queue;
+    TaskQueue<FileMeteData> Download_File_Queue;
+    TaskQueue<FileMeteData> m_file;
+
+    TaskQueue<std::shared_ptr<std::atomic_int>> m_long_task_progress;
+
+    std::map<std::string,std::shared_ptr<FileDirTree>> m_dir_tree; //虚拟文件目录树
+    std::shared_ptr<std::mt19937_64> m_random_task = nullptr;
+    //std::vector<std::pair<std::mutex,std::map<std::string, std::map<FileDetail>>> m_file_detail_map;
 };

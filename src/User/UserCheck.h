@@ -10,6 +10,8 @@ public:
     UserCheck();
     ~UserCheck();
 
+    static UserCheck& getInstance();
+
     bool loginCheck(const std::string& username, const std::string& password, std::string& token);
 
     bool tokenCheck(const std::string& token, std::string& username);

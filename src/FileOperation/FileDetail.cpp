@@ -1,48 +1,57 @@
 #include "FileDetail.h"
 #include "tools.h"
-FileDetail::FileDetail(const std::string& path, const std::string& name, long long size)
-	: _path(path),_name(name), _size(size)
+#include "ThreadPool.h"
+#include "FileOperation.h"
+FileDetail::FileDetail(std::shared_ptr<FileMeteData> metedata): _metedata(metedata)
 {
-	/*for (int i = 0; i < (_size + 1024 * 1024) / 4; i++)
-	{
-		_blocks.insert(i);
-	}*/
-	std::string location = path + "\\" + name;
-	_md5 = tools::calculate_md5(location.c_str(),location.size());
+	uint64_t block_size = metedata->_size;
+	int count = 0;
+	while (block_size > 0) {
+		int size = block_size > BLOCK_SIZE ? BLOCK_SIZE : block_size;
+		_blocks.insert(std::make_pair(count, std::make_pair(size, false)));
+		block_size -= size;
+		count++;
+	}
+
 }
 
-const std::string& FileDetail::path() const
+bool FileDetail::modify_block(int block ,int size)
 {
-	return _path;
+	std::lock_guard<std::mutex> lock(_mutex);
+	auto it = _blocks.find(block);
+	if (it == _blocks.end() || it->second.second == true || size != it->second.first) {
+		return false;
+	}
+	it->second.second = true;
+	return true;
 }
 
-const std::string& FileDetail::name() const
+const std::map<int, std::pair<int, bool>>  FileDetail::blocks()
 {
-	return _name;
+	std::lock_guard<std::mutex> lock(_mutex);
+	return _blocks;
 }
 
-const std::string& FileDetail::type() const
+bool FileDetail::set_merge()
 {
-	return _name.substr(_name.rfind('.'));
+	std::lock_guard<std::mutex> lock(_mutex);
+	if (_merge_status) {
+		return false;
+	}
+	for (const auto& [key, value] : _blocks) {
+        if (value.second == false) {
+            return false;
+        }
+	}
+	_merge_status = true;
+	return true;
 }
 
-const long long FileDetail::size() const
+
+std::shared_ptr<FileMeteData> FileDetail::get_mete_data()
 {
-	return _size;
+	return _metedata;
 }
 
-const int FileDetail::find_next() const
-{
-	if (_blocks.empty()) return -1;
-	return *_blocks.begin();
-}
 
-const std::string& FileDetail::md5() const
-{
-	return _md5;
-}
 
-const std::string FileDetail::location() const
-{
-	return _path + "\\" + _name;
-}

@@ -31,6 +31,21 @@ std::string tools::calculate_md5(const char* data,const int size)
     return ss.str();
 }
 
+bool tools::Check_Filename(std::string filename)
+{
+    if (filename.empty())
+        return false;
+    const std::string invalid_chars = "/\\:*?\"<>|";
+    if (filename.find_first_of(invalid_chars) != std::string::npos)
+        return false;
+    if (filename.length() > 255)
+        return false;
+    if (filename[0] == '.')
+        return false;
+    return true;
+}
+
+
 tools::logger& tools::logger::Get()
 {
     static logger my;

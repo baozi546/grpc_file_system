@@ -28,7 +28,7 @@ file(GLOB HEADER_LIST1 "${CMAKE_CURRENT_SOURCE_DIR}/proto/*.h")
 add_executable(Main
     main.cpp
     ${SRC_LIST1}
- "src/Service/FileServer.h" "src/Service/FileServer.cpp" "src/FileOperation/FileDetail.h" "src/FileOperation/FileDetail.cpp" "src/FileOperation/FileOperation.h" "src/FileOperation/FileOperation.cpp" "src/tools/tools.h" "src/tools/tools.cpp" "src/FileOperation/FileDirTree.h" "src/FileOperation/FileDirTree.cpp" "src/Service/AuthServer.cpp" "src/Service/AuthServer.h" "src/User/UserCheck.h" "src/User/UserCheck.cpp" "src/Service/ServiceAwareInterceptorFactory.cpp")
+ "src/Service/FileServer.h" "src/Service/FileServer.cpp" "src/FileOperation/FileDetail.h" "src/FileOperation/FileDetail.cpp" "src/FileOperation/FileOperation.h" "src/FileOperation/FileOperation.cpp" "src/tools/tools.h" "src/tools/tools.cpp" "src/FileOperation/FileDirTree.h" "src/FileOperation/FileDirTree.cpp" "src/Service/AuthServer.cpp" "src/Service/AuthServer.h" "src/User/UserCheck.h" "src/User/UserCheck.cpp" "src/Service/ServerInterceptorFactory.h" "src/Service/ServerInterceptorFactory.cpp" "src/tools/element_define.h" "src/tools/ThreadPool.h" "src/tools/ThreadPool.cpp")
 
 target_link_libraries(Main PRIVATE gRPC::grpc++ gRPC::grpc++_reflection gRPC::gpr gRPC::grpc gRPC::grpc++ protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite)
 target_link_libraries(Main PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)

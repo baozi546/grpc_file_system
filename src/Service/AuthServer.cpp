@@ -1,5 +1,6 @@
 #include "AuthServer.h"
 #include "tools.h"
+#include "UserCheck.h"
 
 AuthServer::AuthServer()
 {
@@ -10,16 +11,12 @@ void AuthServer::Read_Dir_Config()
 {
 }
 
-void AuthServer::Set_UserCheck(std::shared_ptr<UserCheck> userCheck)
-{
-    m_userCheck = userCheck;
-}
 
 grpc::Status AuthServer::Login(grpc::ServerContext* context, const file_system::LoginRequest* request, file_system::OperationResponse* response)
 {
     LOG_INFO("Login request received");
     std::string token;
-    if (m_userCheck->loginCheck(request->username(), request->password(), token)) {
+    if (UserCheck::getInstance().loginCheck(request->username(), request->password(), token)) {
         LOG_INFO("Login success");
         response->set_success(true);
         response->set_extensions(token);

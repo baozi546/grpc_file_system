@@ -1,4 +1,4 @@
-# Install script for directory: D:/Project/FileDatamanager/tests
+# Install script for directory: D:/Project/grpc_file_system/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,6 +35,6 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "D:/Project/FileDatamanager/build/tests/install_local_manifest.txt"
+  file(WRITE "D:/Project/grpc_file_system/build/tests/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

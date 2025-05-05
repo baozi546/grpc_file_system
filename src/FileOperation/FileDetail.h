@@ -1,22 +1,30 @@
 #pragma once
 #include <set>
 #include <string>
+#include <mutex>
+#include <map>
+
+struct FileMeteData {
+	std::string _file_id;
+	std::string _owner;
+	int acctual_block_id;
+	std::string _name;
+	std::string _md5;
+	long long _size;
+};
+
 class FileDetail {
 public:
-	FileDetail(const std::string& path, const std::string& name,long long size);
+	FileDetail(std::shared_ptr<FileMeteData> file);
 	
-	const std::string& path() const;
-	const std::string& name() const;
-	const std::string& type() const;
-	const long long size() const;
-	const int find_next() const;
-	const std::string& md5() const;
-	const std::string location() const;
+	bool modify_block(int block,int size);
+	const std::map<int, std::pair<int, bool>>  blocks();
+	bool set_merge();
+	std::shared_ptr<FileMeteData> get_mete_data();
 
 private:
-	std::string _path;
-	std::string _name;
-	std::string _md5; 
-	long long _size;
-	std::set<int> _blocks;//存储文件块
+	std::shared_ptr<FileMeteData> _metedata;
+	std::map<int, std::pair<int, bool>>  _blocks;//存储文件块
+	std::mutex _mutex;
+	bool _merge_status = false;
 };

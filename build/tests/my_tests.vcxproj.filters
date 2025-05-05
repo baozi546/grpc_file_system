@@ -1,25 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Project\FileDatamanager\tests\Client.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\tests\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\tests\test_example.cpp">
+    <ClCompile Include="D:\Project\grpc_file_system\tests\test_example.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\proto\define.grpc.pb.cc">
+    <ClCompile Include="D:\Project\grpc_file_system\proto\define.grpc.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Project\FileDatamanager\proto\define.pb.cc">
+    <ClCompile Include="D:\Project\grpc_file_system\proto\define.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Project\grpc_file_system\src\tools\tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Project\FileDatamanager\tests\CMakeLists.txt" />
+    <CustomBuild Include="D:\Project\grpc_file_system\tests\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{3C508566-E1A4-3FD3-929D-49C713271AD9}</UniqueIdentifier>
+      <UniqueIdentifier>{9BAC7BB1-6A44-3C9C-AFC9-3574B47B772A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

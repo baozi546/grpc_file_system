@@ -5,10 +5,10 @@
 
 namespace FileOperation {
 
-	int FileWrite(std::shared_ptr<FileDetail>);
+	int FileWrite(const std::string& name,const std::string& value , const std::string& root_path);
 
-	int FileRead(const FileDetail&,std::vector<char>& buffer);
+	int FileRead(const std::string& name, std::string& buffer , const std::string& root_path);
 
-	int FileCreate(const FileDetail&);
+	int FileCreate(const std::string&name , const std::string& path);
 
 };

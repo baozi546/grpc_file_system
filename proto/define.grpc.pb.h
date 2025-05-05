@@ -24,6 +24,7 @@
 #include <grpcpp/support/status.h>
 #include <grpcpp/support/stub_options.h>
 #include <grpcpp/support/sync_stream.h>
+#include <grpcpp/ports_def.inc>
 
 namespace file_system {
 
@@ -35,7 +36,6 @@ class AuthService final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    // 用户登录获取Token.
     virtual ::grpc::Status Login(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::file_system::OperationResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> AsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(AsyncLoginRaw(context, request, cq));
@@ -43,7 +43,7 @@ class AuthService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> PrepareAsyncLogin(::grpc::ClientContext* context, const ::file_system::LoginRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(PrepareAsyncLoginRaw(context, request, cq));
     }
-    // 权限验证（元数据中携带Token）.
+    // 用户登录获取Token.
     virtual ::grpc::Status CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::file_system::PermissionResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>> AsyncCheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>>(AsyncCheckPermissionRaw(context, request, cq));
@@ -51,15 +51,16 @@ class AuthService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>> PrepareAsyncCheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::PermissionResponse>>(PrepareAsyncCheckPermissionRaw(context, request, cq));
     }
+    // 权限验证（元数据中携带Token）.
     class async_interface {
      public:
       virtual ~async_interface() {}
-      // 用户登录获取Token.
       virtual void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void Login(::grpc::ClientContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // 权限验证（元数据中携带Token）.
+      // 用户登录获取Token.
       virtual void CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void CheckPermission(::grpc::ClientContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      // 权限验证（元数据中携带Token）.
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
@@ -118,10 +119,10 @@ class AuthService final {
    public:
     Service();
     virtual ~Service();
-    // 用户登录获取Token.
     virtual ::grpc::Status Login(::grpc::ServerContext* context, const ::file_system::LoginRequest* request, ::file_system::OperationResponse* response);
-    // 权限验证（元数据中携带Token）.
+    // 用户登录获取Token.
     virtual ::grpc::Status CheckPermission(::grpc::ServerContext* context, const ::file_system::PermissionRequest* request, ::file_system::PermissionResponse* response);
+    // 权限验证（元数据中携带Token）.
   };
   template <class BaseClass>
   class WithAsyncMethod_Login : public BaseClass {
@@ -419,7 +420,6 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadFileResponse>> PrepareAsyncUploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadFileResponse>>(PrepareAsyncUploadFileRequestRaw(context, request, cq));
     }
-    // 客户端流式上传（支持断点续传）.
     std::unique_ptr< ::grpc::ClientWriterInterface< ::file_system::FileChunk>> UploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response) {
       return std::unique_ptr< ::grpc::ClientWriterInterface< ::file_system::FileChunk>>(UploadFileRaw(context, response));
     }
@@ -429,7 +429,15 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::file_system::FileChunk>> PrepareAsyncUploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::file_system::FileChunk>>(PrepareAsyncUploadFileRaw(context, response, cq));
     }
-    // 服务端流式下载.
+    // 客户端流式上传（支持断点续传).
+    virtual ::grpc::Status DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::DownloadFileResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::DownloadFileResponse>> AsyncDownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::DownloadFileResponse>>(AsyncDownloadFileRequestRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::DownloadFileResponse>> PrepareAsyncDownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::DownloadFileResponse>>(PrepareAsyncDownloadFileRequestRaw(context, request, cq));
+    }
+    // 服务端流式下载请求.
     std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileChunk>> DownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest& request) {
       return std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileChunk>>(DownloadFileRaw(context, request));
     }
@@ -439,7 +447,7 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileChunk>> PrepareAsyncDownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileChunk>>(PrepareAsyncDownloadFileRaw(context, request, cq));
     }
-    // 查询上传断点状态.
+    // 服务端流式下载.
     virtual ::grpc::Status CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::UploadStatus* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>> AsyncCheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>>(AsyncCheckUploadStatusRaw(context, request, cq));
@@ -447,7 +455,7 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>> PrepareAsyncCheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>>(PrepareAsyncCheckUploadStatusRaw(context, request, cq));
     }
-    // 合并请求.
+    // 查询上传断点状态.
     virtual ::grpc::Status MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::OperationResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> AsyncMergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(AsyncMergeChunkRequestRaw(context, request, cq));
@@ -455,6 +463,15 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>> PrepareAsyncMergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>>(PrepareAsyncMergeChunkRequestRaw(context, request, cq));
     }
+    // 合并并移动.
+    virtual ::grpc::Status ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::file_system::ProgressRespond* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::ProgressRespond>> AsyncProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::ProgressRespond>>(AsyncProgressCheckRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::ProgressRespond>> PrepareAsyncProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::file_system::ProgressRespond>>(PrepareAsyncProgressCheckRaw(context, request, cq));
+    }
+    // 任务进度查询.
     std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileMetadata>> FindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request) {
       return std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileMetadata>>(FindFileRaw(context, request));
     }
@@ -464,6 +481,17 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>> PrepareAsyncFindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>>(PrepareAsyncFindFileRaw(context, request, cq));
     }
+    // 查找文件.
+    std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileMetadata>> GetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request) {
+      return std::unique_ptr< ::grpc::ClientReaderInterface< ::file_system::FileMetadata>>(GetFileListRaw(context, request));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>> AsyncGetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>>(AsyncGetFileListRaw(context, request, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>> PrepareAsyncGetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>>(PrepareAsyncGetFileListRaw(context, request, cq));
+    }
+    // 获取文件列表.
     class async_interface {
      public:
       virtual ~async_interface() {}
@@ -471,17 +499,26 @@ class FileService final {
       virtual void FileOperation(::grpc::ClientContext* context, const ::file_system::FileOperationRequest* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       virtual void UploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void UploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // 客户端流式上传（支持断点续传）.
       virtual void UploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::ClientWriteReactor< ::file_system::FileChunk>* reactor) = 0;
-      // 服务端流式下载.
+      // 客户端流式上传（支持断点续传).
+      virtual void DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      // 服务端流式下载请求.
       virtual void DownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest* request, ::grpc::ClientReadReactor< ::file_system::FileChunk>* reactor) = 0;
-      // 查询上传断点状态.
+      // 服务端流式下载.
       virtual void CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response, std::function<void(::grpc::Status)>) = 0;
       virtual void CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      // 合并请求.
+      // 查询上传断点状态.
       virtual void MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)>) = 0;
       virtual void MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      // 合并并移动.
+      virtual void ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      // 任务进度查询.
       virtual void FindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest* request, ::grpc::ClientReadReactor< ::file_system::FileMetadata>* reactor) = 0;
+      // 查找文件.
+      virtual void GetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest* request, ::grpc::ClientReadReactor< ::file_system::FileMetadata>* reactor) = 0;
+      // 获取文件列表.
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
@@ -494,6 +531,8 @@ class FileService final {
     virtual ::grpc::ClientWriterInterface< ::file_system::FileChunk>* UploadFileRaw(::grpc::ClientContext* context, ::file_system::UploadStatus* response) = 0;
     virtual ::grpc::ClientAsyncWriterInterface< ::file_system::FileChunk>* AsyncUploadFileRaw(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncWriterInterface< ::file_system::FileChunk>* PrepareAsyncUploadFileRaw(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::DownloadFileResponse>* AsyncDownloadFileRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::DownloadFileResponse>* PrepareAsyncDownloadFileRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientReaderInterface< ::file_system::FileChunk>* DownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::file_system::FileChunk>* AsyncDownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::file_system::FileChunk>* PrepareAsyncDownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -501,9 +540,14 @@ class FileService final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::UploadStatus>* PrepareAsyncCheckUploadStatusRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>* AsyncMergeChunkRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::OperationResponse>* PrepareAsyncMergeChunkRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::ProgressRespond>* AsyncProgressCheckRaw(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::file_system::ProgressRespond>* PrepareAsyncProgressCheckRaw(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientReaderInterface< ::file_system::FileMetadata>* FindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>* AsyncFindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>* PrepareAsyncFindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderInterface< ::file_system::FileMetadata>* GetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>* AsyncGetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::file_system::FileMetadata>* PrepareAsyncGetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -531,6 +575,13 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncWriter< ::file_system::FileChunk>> PrepareAsyncUploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncWriter< ::file_system::FileChunk>>(PrepareAsyncUploadFileRaw(context, response, cq));
     }
+    ::grpc::Status DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::DownloadFileResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>> AsyncDownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>>(AsyncDownloadFileRequestRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>> PrepareAsyncDownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>>(PrepareAsyncDownloadFileRequestRaw(context, request, cq));
+    }
     std::unique_ptr< ::grpc::ClientReader< ::file_system::FileChunk>> DownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest& request) {
       return std::unique_ptr< ::grpc::ClientReader< ::file_system::FileChunk>>(DownloadFileRaw(context, request));
     }
@@ -554,6 +605,13 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>> PrepareAsyncMergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>>(PrepareAsyncMergeChunkRequestRaw(context, request, cq));
     }
+    ::grpc::Status ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::file_system::ProgressRespond* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>> AsyncProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>>(AsyncProgressCheckRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>> PrepareAsyncProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>>(PrepareAsyncProgressCheckRaw(context, request, cq));
+    }
     std::unique_ptr< ::grpc::ClientReader< ::file_system::FileMetadata>> FindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request) {
       return std::unique_ptr< ::grpc::ClientReader< ::file_system::FileMetadata>>(FindFileRaw(context, request));
     }
@@ -563,6 +621,15 @@ class FileService final {
     std::unique_ptr< ::grpc::ClientAsyncReader< ::file_system::FileMetadata>> PrepareAsyncFindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReader< ::file_system::FileMetadata>>(PrepareAsyncFindFileRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientReader< ::file_system::FileMetadata>> GetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request) {
+      return std::unique_ptr< ::grpc::ClientReader< ::file_system::FileMetadata>>(GetFileListRaw(context, request));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::file_system::FileMetadata>> AsyncGetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::file_system::FileMetadata>>(AsyncGetFileListRaw(context, request, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::file_system::FileMetadata>> PrepareAsyncGetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::file_system::FileMetadata>>(PrepareAsyncGetFileListRaw(context, request, cq));
+    }
     class async final :
       public StubInterface::async_interface {
      public:
@@ -571,12 +638,17 @@ class FileService final {
       void UploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response, std::function<void(::grpc::Status)>) override;
       void UploadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       void UploadFile(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::ClientWriteReactor< ::file_system::FileChunk>* reactor) override;
+      void DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response, std::function<void(::grpc::Status)>) override;
+      void DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       void DownloadFile(::grpc::ClientContext* context, const ::file_system::FileRequest* request, ::grpc::ClientReadReactor< ::file_system::FileChunk>* reactor) override;
       void CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response, std::function<void(::grpc::Status)>) override;
       void CheckUploadStatus(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response, ::grpc::ClientUnaryReactor* reactor) override;
       void MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response, std::function<void(::grpc::Status)>) override;
       void MergeChunkRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response, std::function<void(::grpc::Status)>) override;
+      void ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response, ::grpc::ClientUnaryReactor* reactor) override;
       void FindFile(::grpc::ClientContext* context, const ::file_system::FindFileRequest* request, ::grpc::ClientReadReactor< ::file_system::FileMetadata>* reactor) override;
+      void GetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest* request, ::grpc::ClientReadReactor< ::file_system::FileMetadata>* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -595,6 +667,8 @@ class FileService final {
     ::grpc::ClientWriter< ::file_system::FileChunk>* UploadFileRaw(::grpc::ClientContext* context, ::file_system::UploadStatus* response) override;
     ::grpc::ClientAsyncWriter< ::file_system::FileChunk>* AsyncUploadFileRaw(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncWriter< ::file_system::FileChunk>* PrepareAsyncUploadFileRaw(::grpc::ClientContext* context, ::file_system::UploadStatus* response, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>* AsyncDownloadFileRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>* PrepareAsyncDownloadFileRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientReader< ::file_system::FileChunk>* DownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request) override;
     ::grpc::ClientAsyncReader< ::file_system::FileChunk>* AsyncDownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncReader< ::file_system::FileChunk>* PrepareAsyncDownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -602,16 +676,24 @@ class FileService final {
     ::grpc::ClientAsyncResponseReader< ::file_system::UploadStatus>* PrepareAsyncCheckUploadStatusRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>* AsyncMergeChunkRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::file_system::OperationResponse>* PrepareAsyncMergeChunkRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>* AsyncProgressCheckRaw(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>* PrepareAsyncProgressCheckRaw(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientReader< ::file_system::FileMetadata>* FindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request) override;
     ::grpc::ClientAsyncReader< ::file_system::FileMetadata>* AsyncFindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncReader< ::file_system::FileMetadata>* PrepareAsyncFindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientReader< ::file_system::FileMetadata>* GetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request) override;
+    ::grpc::ClientAsyncReader< ::file_system::FileMetadata>* AsyncGetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReader< ::file_system::FileMetadata>* PrepareAsyncGetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_FileOperation_;
     const ::grpc::internal::RpcMethod rpcmethod_UploadFileRequest_;
     const ::grpc::internal::RpcMethod rpcmethod_UploadFile_;
+    const ::grpc::internal::RpcMethod rpcmethod_DownloadFileRequest_;
     const ::grpc::internal::RpcMethod rpcmethod_DownloadFile_;
     const ::grpc::internal::RpcMethod rpcmethod_CheckUploadStatus_;
     const ::grpc::internal::RpcMethod rpcmethod_MergeChunkRequest_;
+    const ::grpc::internal::RpcMethod rpcmethod_ProgressCheck_;
     const ::grpc::internal::RpcMethod rpcmethod_FindFile_;
+    const ::grpc::internal::RpcMethod rpcmethod_GetFileList_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -621,15 +703,22 @@ class FileService final {
     virtual ~Service();
     virtual ::grpc::Status FileOperation(::grpc::ServerContext* context, const ::file_system::FileOperationRequest* request, ::file_system::OperationResponse* response);
     virtual ::grpc::Status UploadFileRequest(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadFileResponse* response);
-    // 客户端流式上传（支持断点续传）.
     virtual ::grpc::Status UploadFile(::grpc::ServerContext* context, ::grpc::ServerReader< ::file_system::FileChunk>* reader, ::file_system::UploadStatus* response);
-    // 服务端流式下载.
+    // 客户端流式上传（支持断点续传).
+    virtual ::grpc::Status DownloadFileRequest(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response);
+    // 服务端流式下载请求.
     virtual ::grpc::Status DownloadFile(::grpc::ServerContext* context, const ::file_system::FileRequest* request, ::grpc::ServerWriter< ::file_system::FileChunk>* writer);
-    // 查询上传断点状态.
+    // 服务端流式下载.
     virtual ::grpc::Status CheckUploadStatus(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response);
-    // 合并请求.
+    // 查询上传断点状态.
     virtual ::grpc::Status MergeChunkRequest(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response);
+    // 合并并移动.
+    virtual ::grpc::Status ProgressCheck(::grpc::ServerContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response);
+    // 任务进度查询.
     virtual ::grpc::Status FindFile(::grpc::ServerContext* context, const ::file_system::FindFileRequest* request, ::grpc::ServerWriter< ::file_system::FileMetadata>* writer);
+    // 查找文件.
+    virtual ::grpc::Status GetFileList(::grpc::ServerContext* context, const ::file_system::GetFileListRequest* request, ::grpc::ServerWriter< ::file_system::FileMetadata>* writer);
+    // 获取文件列表.
   };
   template <class BaseClass>
   class WithAsyncMethod_FileOperation : public BaseClass {
@@ -692,12 +781,32 @@ class FileService final {
     }
   };
   template <class BaseClass>
+  class WithAsyncMethod_DownloadFileRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_DownloadFileRequest() {
+      ::grpc::Service::MarkMethodAsync(3);
+    }
+    ~WithAsyncMethod_DownloadFileRequest() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status DownloadFileRequest(::grpc::ServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestDownloadFileRequest(::grpc::ServerContext* context, ::file_system::FileMetadata* request, ::grpc::ServerAsyncResponseWriter< ::file_system::DownloadFileResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_DownloadFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_DownloadFile() {
-      ::grpc::Service::MarkMethodAsync(3);
+      ::grpc::Service::MarkMethodAsync(4);
     }
     ~WithAsyncMethod_DownloadFile() override {
       BaseClassMustBeDerivedFromService(this);
@@ -708,7 +817,7 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestDownloadFile(::grpc::ServerContext* context, ::file_system::FileRequest* request, ::grpc::ServerAsyncWriter< ::file_system::FileChunk>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(3, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(4, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -717,7 +826,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_CheckUploadStatus() {
-      ::grpc::Service::MarkMethodAsync(4);
+      ::grpc::Service::MarkMethodAsync(5);
     }
     ~WithAsyncMethod_CheckUploadStatus() override {
       BaseClassMustBeDerivedFromService(this);
@@ -728,7 +837,7 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestCheckUploadStatus(::grpc::ServerContext* context, ::file_system::FileMetadata* request, ::grpc::ServerAsyncResponseWriter< ::file_system::UploadStatus>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -737,7 +846,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_MergeChunkRequest() {
-      ::grpc::Service::MarkMethodAsync(5);
+      ::grpc::Service::MarkMethodAsync(6);
     }
     ~WithAsyncMethod_MergeChunkRequest() override {
       BaseClassMustBeDerivedFromService(this);
@@ -748,7 +857,27 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestMergeChunkRequest(::grpc::ServerContext* context, ::file_system::FileMetadata* request, ::grpc::ServerAsyncResponseWriter< ::file_system::OperationResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_ProgressCheck : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_ProgressCheck() {
+      ::grpc::Service::MarkMethodAsync(7);
+    }
+    ~WithAsyncMethod_ProgressCheck() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ProgressCheck(::grpc::ServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestProgressCheck(::grpc::ServerContext* context, ::file_system::ProgressRequest* request, ::grpc::ServerAsyncResponseWriter< ::file_system::ProgressRespond>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -757,7 +886,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_FindFile() {
-      ::grpc::Service::MarkMethodAsync(6);
+      ::grpc::Service::MarkMethodAsync(8);
     }
     ~WithAsyncMethod_FindFile() override {
       BaseClassMustBeDerivedFromService(this);
@@ -768,10 +897,30 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestFindFile(::grpc::ServerContext* context, ::file_system::FindFileRequest* request, ::grpc::ServerAsyncWriter< ::file_system::FileMetadata>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(6, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(8, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_FileOperation<WithAsyncMethod_UploadFileRequest<WithAsyncMethod_UploadFile<WithAsyncMethod_DownloadFile<WithAsyncMethod_CheckUploadStatus<WithAsyncMethod_MergeChunkRequest<WithAsyncMethod_FindFile<Service > > > > > > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_GetFileList : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_GetFileList() {
+      ::grpc::Service::MarkMethodAsync(9);
+    }
+    ~WithAsyncMethod_GetFileList() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetFileList(::grpc::ServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestGetFileList(::grpc::ServerContext* context, ::file_system::GetFileListRequest* request, ::grpc::ServerAsyncWriter< ::file_system::FileMetadata>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncServerStreaming(9, context, request, writer, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_FileOperation<WithAsyncMethod_UploadFileRequest<WithAsyncMethod_UploadFile<WithAsyncMethod_DownloadFileRequest<WithAsyncMethod_DownloadFile<WithAsyncMethod_CheckUploadStatus<WithAsyncMethod_MergeChunkRequest<WithAsyncMethod_ProgressCheck<WithAsyncMethod_FindFile<WithAsyncMethod_GetFileList<Service > > > > > > > > > > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_FileOperation : public BaseClass {
    private:
@@ -849,12 +998,39 @@ class FileService final {
       ::grpc::CallbackServerContext* /*context*/, ::file_system::UploadStatus* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
+  class WithCallbackMethod_DownloadFileRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_DownloadFileRequest() {
+      ::grpc::Service::MarkMethodCallback(3,
+          new ::grpc::internal::CallbackUnaryHandler< ::file_system::FileMetadata, ::file_system::DownloadFileResponse>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response) { return this->DownloadFileRequest(context, request, response); }));}
+    void SetMessageAllocatorFor_DownloadFileRequest(
+        ::grpc::MessageAllocator< ::file_system::FileMetadata, ::file_system::DownloadFileResponse>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::file_system::FileMetadata, ::file_system::DownloadFileResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~WithCallbackMethod_DownloadFileRequest() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status DownloadFileRequest(::grpc::ServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* DownloadFileRequest(
+      ::grpc::CallbackServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
   class WithCallbackMethod_DownloadFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_DownloadFile() {
-      ::grpc::Service::MarkMethodCallback(3,
+      ::grpc::Service::MarkMethodCallback(4,
           new ::grpc::internal::CallbackServerStreamingHandler< ::file_system::FileRequest, ::file_system::FileChunk>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::file_system::FileRequest* request) { return this->DownloadFile(context, request); }));
@@ -876,13 +1052,13 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_CheckUploadStatus() {
-      ::grpc::Service::MarkMethodCallback(4,
+      ::grpc::Service::MarkMethodCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::file_system::FileMetadata, ::file_system::UploadStatus>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::file_system::FileMetadata* request, ::file_system::UploadStatus* response) { return this->CheckUploadStatus(context, request, response); }));}
     void SetMessageAllocatorFor_CheckUploadStatus(
         ::grpc::MessageAllocator< ::file_system::FileMetadata, ::file_system::UploadStatus>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
       static_cast<::grpc::internal::CallbackUnaryHandler< ::file_system::FileMetadata, ::file_system::UploadStatus>*>(handler)
               ->SetMessageAllocator(allocator);
     }
@@ -903,13 +1079,13 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_MergeChunkRequest() {
-      ::grpc::Service::MarkMethodCallback(5,
+      ::grpc::Service::MarkMethodCallback(6,
           new ::grpc::internal::CallbackUnaryHandler< ::file_system::FileMetadata, ::file_system::OperationResponse>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::file_system::FileMetadata* request, ::file_system::OperationResponse* response) { return this->MergeChunkRequest(context, request, response); }));}
     void SetMessageAllocatorFor_MergeChunkRequest(
         ::grpc::MessageAllocator< ::file_system::FileMetadata, ::file_system::OperationResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
       static_cast<::grpc::internal::CallbackUnaryHandler< ::file_system::FileMetadata, ::file_system::OperationResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
@@ -925,12 +1101,39 @@ class FileService final {
       ::grpc::CallbackServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::OperationResponse* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
+  class WithCallbackMethod_ProgressCheck : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_ProgressCheck() {
+      ::grpc::Service::MarkMethodCallback(7,
+          new ::grpc::internal::CallbackUnaryHandler< ::file_system::ProgressRequest, ::file_system::ProgressRespond>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response) { return this->ProgressCheck(context, request, response); }));}
+    void SetMessageAllocatorFor_ProgressCheck(
+        ::grpc::MessageAllocator< ::file_system::ProgressRequest, ::file_system::ProgressRespond>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::file_system::ProgressRequest, ::file_system::ProgressRespond>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~WithCallbackMethod_ProgressCheck() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ProgressCheck(::grpc::ServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* ProgressCheck(
+      ::grpc::CallbackServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
   class WithCallbackMethod_FindFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithCallbackMethod_FindFile() {
-      ::grpc::Service::MarkMethodCallback(6,
+      ::grpc::Service::MarkMethodCallback(8,
           new ::grpc::internal::CallbackServerStreamingHandler< ::file_system::FindFileRequest, ::file_system::FileMetadata>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::file_system::FindFileRequest* request) { return this->FindFile(context, request); }));
@@ -946,7 +1149,29 @@ class FileService final {
     virtual ::grpc::ServerWriteReactor< ::file_system::FileMetadata>* FindFile(
       ::grpc::CallbackServerContext* /*context*/, const ::file_system::FindFileRequest* /*request*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_FileOperation<WithCallbackMethod_UploadFileRequest<WithCallbackMethod_UploadFile<WithCallbackMethod_DownloadFile<WithCallbackMethod_CheckUploadStatus<WithCallbackMethod_MergeChunkRequest<WithCallbackMethod_FindFile<Service > > > > > > > CallbackService;
+  template <class BaseClass>
+  class WithCallbackMethod_GetFileList : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_GetFileList() {
+      ::grpc::Service::MarkMethodCallback(9,
+          new ::grpc::internal::CallbackServerStreamingHandler< ::file_system::GetFileListRequest, ::file_system::FileMetadata>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::file_system::GetFileListRequest* request) { return this->GetFileList(context, request); }));
+    }
+    ~WithCallbackMethod_GetFileList() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetFileList(::grpc::ServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerWriteReactor< ::file_system::FileMetadata>* GetFileList(
+      ::grpc::CallbackServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/)  { return nullptr; }
+  };
+  typedef WithCallbackMethod_FileOperation<WithCallbackMethod_UploadFileRequest<WithCallbackMethod_UploadFile<WithCallbackMethod_DownloadFileRequest<WithCallbackMethod_DownloadFile<WithCallbackMethod_CheckUploadStatus<WithCallbackMethod_MergeChunkRequest<WithCallbackMethod_ProgressCheck<WithCallbackMethod_FindFile<WithCallbackMethod_GetFileList<Service > > > > > > > > > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_FileOperation : public BaseClass {
@@ -1000,12 +1225,29 @@ class FileService final {
     }
   };
   template <class BaseClass>
+  class WithGenericMethod_DownloadFileRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_DownloadFileRequest() {
+      ::grpc::Service::MarkMethodGeneric(3);
+    }
+    ~WithGenericMethod_DownloadFileRequest() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status DownloadFileRequest(::grpc::ServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
   class WithGenericMethod_DownloadFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_DownloadFile() {
-      ::grpc::Service::MarkMethodGeneric(3);
+      ::grpc::Service::MarkMethodGeneric(4);
     }
     ~WithGenericMethod_DownloadFile() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1022,7 +1264,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_CheckUploadStatus() {
-      ::grpc::Service::MarkMethodGeneric(4);
+      ::grpc::Service::MarkMethodGeneric(5);
     }
     ~WithGenericMethod_CheckUploadStatus() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1039,7 +1281,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_MergeChunkRequest() {
-      ::grpc::Service::MarkMethodGeneric(5);
+      ::grpc::Service::MarkMethodGeneric(6);
     }
     ~WithGenericMethod_MergeChunkRequest() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1051,18 +1293,52 @@ class FileService final {
     }
   };
   template <class BaseClass>
+  class WithGenericMethod_ProgressCheck : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_ProgressCheck() {
+      ::grpc::Service::MarkMethodGeneric(7);
+    }
+    ~WithGenericMethod_ProgressCheck() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ProgressCheck(::grpc::ServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
   class WithGenericMethod_FindFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_FindFile() {
-      ::grpc::Service::MarkMethodGeneric(6);
+      ::grpc::Service::MarkMethodGeneric(8);
     }
     ~WithGenericMethod_FindFile() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
     ::grpc::Status FindFile(::grpc::ServerContext* /*context*/, const ::file_system::FindFileRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_GetFileList : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_GetFileList() {
+      ::grpc::Service::MarkMethodGeneric(9);
+    }
+    ~WithGenericMethod_GetFileList() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetFileList(::grpc::ServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -1128,12 +1404,32 @@ class FileService final {
     }
   };
   template <class BaseClass>
+  class WithRawMethod_DownloadFileRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_DownloadFileRequest() {
+      ::grpc::Service::MarkMethodRaw(3);
+    }
+    ~WithRawMethod_DownloadFileRequest() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status DownloadFileRequest(::grpc::ServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestDownloadFileRequest(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithRawMethod_DownloadFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_DownloadFile() {
-      ::grpc::Service::MarkMethodRaw(3);
+      ::grpc::Service::MarkMethodRaw(4);
     }
     ~WithRawMethod_DownloadFile() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1144,7 +1440,7 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestDownloadFile(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(3, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(4, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1153,7 +1449,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_CheckUploadStatus() {
-      ::grpc::Service::MarkMethodRaw(4);
+      ::grpc::Service::MarkMethodRaw(5);
     }
     ~WithRawMethod_CheckUploadStatus() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1164,7 +1460,7 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestCheckUploadStatus(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1173,7 +1469,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_MergeChunkRequest() {
-      ::grpc::Service::MarkMethodRaw(5);
+      ::grpc::Service::MarkMethodRaw(6);
     }
     ~WithRawMethod_MergeChunkRequest() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1184,7 +1480,27 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestMergeChunkRequest(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_ProgressCheck : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_ProgressCheck() {
+      ::grpc::Service::MarkMethodRaw(7);
+    }
+    ~WithRawMethod_ProgressCheck() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ProgressCheck(::grpc::ServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestProgressCheck(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1193,7 +1509,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_FindFile() {
-      ::grpc::Service::MarkMethodRaw(6);
+      ::grpc::Service::MarkMethodRaw(8);
     }
     ~WithRawMethod_FindFile() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1204,7 +1520,27 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestFindFile(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(6, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(8, context, request, writer, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_GetFileList : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_GetFileList() {
+      ::grpc::Service::MarkMethodRaw(9);
+    }
+    ~WithRawMethod_GetFileList() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetFileList(::grpc::ServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestGetFileList(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncServerStreaming(9, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1274,12 +1610,34 @@ class FileService final {
       ::grpc::CallbackServerContext* /*context*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
+  class WithRawCallbackMethod_DownloadFileRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_DownloadFileRequest() {
+      ::grpc::Service::MarkMethodRawCallback(3,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->DownloadFileRequest(context, request, response); }));
+    }
+    ~WithRawCallbackMethod_DownloadFileRequest() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status DownloadFileRequest(::grpc::ServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* DownloadFileRequest(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
   class WithRawCallbackMethod_DownloadFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_DownloadFile() {
-      ::grpc::Service::MarkMethodRawCallback(3,
+      ::grpc::Service::MarkMethodRawCallback(4,
           new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const::grpc::ByteBuffer* request) { return this->DownloadFile(context, request); }));
@@ -1301,7 +1659,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_CheckUploadStatus() {
-      ::grpc::Service::MarkMethodRawCallback(4,
+      ::grpc::Service::MarkMethodRawCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->CheckUploadStatus(context, request, response); }));
@@ -1323,7 +1681,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_MergeChunkRequest() {
-      ::grpc::Service::MarkMethodRawCallback(5,
+      ::grpc::Service::MarkMethodRawCallback(6,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->MergeChunkRequest(context, request, response); }));
@@ -1340,12 +1698,34 @@ class FileService final {
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
   };
   template <class BaseClass>
+  class WithRawCallbackMethod_ProgressCheck : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_ProgressCheck() {
+      ::grpc::Service::MarkMethodRawCallback(7,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->ProgressCheck(context, request, response); }));
+    }
+    ~WithRawCallbackMethod_ProgressCheck() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ProgressCheck(::grpc::ServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* ProgressCheck(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
   class WithRawCallbackMethod_FindFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawCallbackMethod_FindFile() {
-      ::grpc::Service::MarkMethodRawCallback(6,
+      ::grpc::Service::MarkMethodRawCallback(8,
           new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
                    ::grpc::CallbackServerContext* context, const::grpc::ByteBuffer* request) { return this->FindFile(context, request); }));
@@ -1359,6 +1739,28 @@ class FileService final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerWriteReactor< ::grpc::ByteBuffer>* FindFile(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/)  { return nullptr; }
+  };
+  template <class BaseClass>
+  class WithRawCallbackMethod_GetFileList : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_GetFileList() {
+      ::grpc::Service::MarkMethodRawCallback(9,
+          new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const::grpc::ByteBuffer* request) { return this->GetFileList(context, request); }));
+    }
+    ~WithRawCallbackMethod_GetFileList() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status GetFileList(::grpc::ServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerWriteReactor< ::grpc::ByteBuffer>* GetFileList(
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/)  { return nullptr; }
   };
   template <class BaseClass>
@@ -1416,12 +1818,39 @@ class FileService final {
     virtual ::grpc::Status StreamedUploadFileRequest(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::file_system::FileMetadata,::file_system::UploadFileResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
+  class WithStreamedUnaryMethod_DownloadFileRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_DownloadFileRequest() {
+      ::grpc::Service::MarkMethodStreamed(3,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::file_system::FileMetadata, ::file_system::DownloadFileResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::file_system::FileMetadata, ::file_system::DownloadFileResponse>* streamer) {
+                       return this->StreamedDownloadFileRequest(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_DownloadFileRequest() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status DownloadFileRequest(::grpc::ServerContext* /*context*/, const ::file_system::FileMetadata* /*request*/, ::file_system::DownloadFileResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedDownloadFileRequest(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::file_system::FileMetadata,::file_system::DownloadFileResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_CheckUploadStatus : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_CheckUploadStatus() {
-      ::grpc::Service::MarkMethodStreamed(4,
+      ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::StreamedUnaryHandler<
           ::file_system::FileMetadata, ::file_system::UploadStatus>(
             [this](::grpc::ServerContext* context,
@@ -1448,7 +1877,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_MergeChunkRequest() {
-      ::grpc::Service::MarkMethodStreamed(5,
+      ::grpc::Service::MarkMethodStreamed(6,
         new ::grpc::internal::StreamedUnaryHandler<
           ::file_system::FileMetadata, ::file_system::OperationResponse>(
             [this](::grpc::ServerContext* context,
@@ -1469,14 +1898,41 @@ class FileService final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedMergeChunkRequest(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::file_system::FileMetadata,::file_system::OperationResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_FileOperation<WithStreamedUnaryMethod_UploadFileRequest<WithStreamedUnaryMethod_CheckUploadStatus<WithStreamedUnaryMethod_MergeChunkRequest<Service > > > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_ProgressCheck : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_ProgressCheck() {
+      ::grpc::Service::MarkMethodStreamed(7,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::file_system::ProgressRequest, ::file_system::ProgressRespond>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::file_system::ProgressRequest, ::file_system::ProgressRespond>* streamer) {
+                       return this->StreamedProgressCheck(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_ProgressCheck() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status ProgressCheck(::grpc::ServerContext* /*context*/, const ::file_system::ProgressRequest* /*request*/, ::file_system::ProgressRespond* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedProgressCheck(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::file_system::ProgressRequest,::file_system::ProgressRespond>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_FileOperation<WithStreamedUnaryMethod_UploadFileRequest<WithStreamedUnaryMethod_DownloadFileRequest<WithStreamedUnaryMethod_CheckUploadStatus<WithStreamedUnaryMethod_MergeChunkRequest<WithStreamedUnaryMethod_ProgressCheck<Service > > > > > > StreamedUnaryService;
   template <class BaseClass>
   class WithSplitStreamingMethod_DownloadFile : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithSplitStreamingMethod_DownloadFile() {
-      ::grpc::Service::MarkMethodStreamed(3,
+      ::grpc::Service::MarkMethodStreamed(4,
         new ::grpc::internal::SplitServerStreamingHandler<
           ::file_system::FileRequest, ::file_system::FileChunk>(
             [this](::grpc::ServerContext* context,
@@ -1503,7 +1959,7 @@ class FileService final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithSplitStreamingMethod_FindFile() {
-      ::grpc::Service::MarkMethodStreamed(6,
+      ::grpc::Service::MarkMethodStreamed(8,
         new ::grpc::internal::SplitServerStreamingHandler<
           ::file_system::FindFileRequest, ::file_system::FileMetadata>(
             [this](::grpc::ServerContext* context,
@@ -1524,11 +1980,39 @@ class FileService final {
     // replace default version of method with split streamed
     virtual ::grpc::Status StreamedFindFile(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::file_system::FindFileRequest,::file_system::FileMetadata>* server_split_streamer) = 0;
   };
-  typedef WithSplitStreamingMethod_DownloadFile<WithSplitStreamingMethod_FindFile<Service > > SplitStreamedService;
-  typedef WithStreamedUnaryMethod_FileOperation<WithStreamedUnaryMethod_UploadFileRequest<WithSplitStreamingMethod_DownloadFile<WithStreamedUnaryMethod_CheckUploadStatus<WithStreamedUnaryMethod_MergeChunkRequest<WithSplitStreamingMethod_FindFile<Service > > > > > > StreamedService;
+  template <class BaseClass>
+  class WithSplitStreamingMethod_GetFileList : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithSplitStreamingMethod_GetFileList() {
+      ::grpc::Service::MarkMethodStreamed(9,
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::file_system::GetFileListRequest, ::file_system::FileMetadata>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerSplitStreamer<
+                     ::file_system::GetFileListRequest, ::file_system::FileMetadata>* streamer) {
+                       return this->StreamedGetFileList(context,
+                         streamer);
+                  }));
+    }
+    ~WithSplitStreamingMethod_GetFileList() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status GetFileList(::grpc::ServerContext* /*context*/, const ::file_system::GetFileListRequest* /*request*/, ::grpc::ServerWriter< ::file_system::FileMetadata>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with split streamed
+    virtual ::grpc::Status StreamedGetFileList(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::file_system::GetFileListRequest,::file_system::FileMetadata>* server_split_streamer) = 0;
+  };
+  typedef WithSplitStreamingMethod_DownloadFile<WithSplitStreamingMethod_FindFile<WithSplitStreamingMethod_GetFileList<Service > > > SplitStreamedService;
+  typedef WithStreamedUnaryMethod_FileOperation<WithStreamedUnaryMethod_UploadFileRequest<WithStreamedUnaryMethod_DownloadFileRequest<WithSplitStreamingMethod_DownloadFile<WithStreamedUnaryMethod_CheckUploadStatus<WithStreamedUnaryMethod_MergeChunkRequest<WithStreamedUnaryMethod_ProgressCheck<WithSplitStreamingMethod_FindFile<WithSplitStreamingMethod_GetFileList<Service > > > > > > > > > StreamedService;
 };
 
 }  // namespace file_system
 
 
+#include <grpcpp/ports_undef.inc>
 #endif  // GRPC_define_2eproto__INCLUDED

@@ -3,11 +3,19 @@
 UserCheck::UserCheck()
 {
     m_secret_key = generate_secure_key(32);
+    m_user_map["zzh"] = user_info("zzh", "123456","","");
 }
 
 UserCheck::~UserCheck()
 {
 }
+
+UserCheck& UserCheck::getInstance()
+{
+    static UserCheck instance;
+    return instance;
+}
+
 
 bool UserCheck::loginCheck(const std::string& username, const std::string& password, std::string& token)
 {

@@ -128,10 +128,13 @@ static const char* FileService_method_names[] = {
   "/file_system.FileService/FileOperation",
   "/file_system.FileService/UploadFileRequest",
   "/file_system.FileService/UploadFile",
+  "/file_system.FileService/DownloadFileRequest",
   "/file_system.FileService/DownloadFile",
   "/file_system.FileService/CheckUploadStatus",
   "/file_system.FileService/MergeChunkRequest",
+  "/file_system.FileService/ProgressCheck",
   "/file_system.FileService/FindFile",
+  "/file_system.FileService/GetFileList",
 };
 
 std::unique_ptr< FileService::Stub> FileService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -144,10 +147,13 @@ FileService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channe
   : channel_(channel), rpcmethod_FileOperation_(FileService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_UploadFileRequest_(FileService_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_UploadFile_(FileService_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::CLIENT_STREAMING, channel)
-  , rpcmethod_DownloadFile_(FileService_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
-  , rpcmethod_CheckUploadStatus_(FileService_method_names[4], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_MergeChunkRequest_(FileService_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_FindFile_(FileService_method_names[6], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_DownloadFileRequest_(FileService_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_DownloadFile_(FileService_method_names[4], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_CheckUploadStatus_(FileService_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_MergeChunkRequest_(FileService_method_names[6], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ProgressCheck_(FileService_method_names[7], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_FindFile_(FileService_method_names[8], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_GetFileList_(FileService_method_names[9], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   {}
 
 ::grpc::Status FileService::Stub::FileOperation(::grpc::ClientContext* context, const ::file_system::FileOperationRequest& request, ::file_system::OperationResponse* response) {
@@ -212,6 +218,29 @@ void FileService::Stub::async::UploadFile(::grpc::ClientContext* context, ::file
   return ::grpc::internal::ClientAsyncWriterFactory< ::file_system::FileChunk>::Create(channel_.get(), cq, rpcmethod_UploadFile_, context, response, false, nullptr);
 }
 
+::grpc::Status FileService::Stub::DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::file_system::DownloadFileResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::file_system::FileMetadata, ::file_system::DownloadFileResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_DownloadFileRequest_, context, request, response);
+}
+
+void FileService::Stub::async::DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::file_system::FileMetadata, ::file_system::DownloadFileResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_DownloadFileRequest_, context, request, response, std::move(f));
+}
+
+void FileService::Stub::async::DownloadFileRequest(::grpc::ClientContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_DownloadFileRequest_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>* FileService::Stub::PrepareAsyncDownloadFileRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::file_system::DownloadFileResponse, ::file_system::FileMetadata, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_DownloadFileRequest_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::file_system::DownloadFileResponse>* FileService::Stub::AsyncDownloadFileRequestRaw(::grpc::ClientContext* context, const ::file_system::FileMetadata& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncDownloadFileRequestRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 ::grpc::ClientReader< ::file_system::FileChunk>* FileService::Stub::DownloadFileRaw(::grpc::ClientContext* context, const ::file_system::FileRequest& request) {
   return ::grpc::internal::ClientReaderFactory< ::file_system::FileChunk>::Create(channel_.get(), rpcmethod_DownloadFile_, context, request);
 }
@@ -274,6 +303,29 @@ void FileService::Stub::async::MergeChunkRequest(::grpc::ClientContext* context,
   return result;
 }
 
+::grpc::Status FileService::Stub::ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::file_system::ProgressRespond* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::file_system::ProgressRequest, ::file_system::ProgressRespond, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_ProgressCheck_, context, request, response);
+}
+
+void FileService::Stub::async::ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::file_system::ProgressRequest, ::file_system::ProgressRespond, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_ProgressCheck_, context, request, response, std::move(f));
+}
+
+void FileService::Stub::async::ProgressCheck(::grpc::ClientContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_ProgressCheck_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>* FileService::Stub::PrepareAsyncProgressCheckRaw(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::file_system::ProgressRespond, ::file_system::ProgressRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_ProgressCheck_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::file_system::ProgressRespond>* FileService::Stub::AsyncProgressCheckRaw(::grpc::ClientContext* context, const ::file_system::ProgressRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncProgressCheckRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 ::grpc::ClientReader< ::file_system::FileMetadata>* FileService::Stub::FindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request) {
   return ::grpc::internal::ClientReaderFactory< ::file_system::FileMetadata>::Create(channel_.get(), rpcmethod_FindFile_, context, request);
 }
@@ -288,6 +340,22 @@ void FileService::Stub::async::FindFile(::grpc::ClientContext* context, const ::
 
 ::grpc::ClientAsyncReader< ::file_system::FileMetadata>* FileService::Stub::PrepareAsyncFindFileRaw(::grpc::ClientContext* context, const ::file_system::FindFileRequest& request, ::grpc::CompletionQueue* cq) {
   return ::grpc::internal::ClientAsyncReaderFactory< ::file_system::FileMetadata>::Create(channel_.get(), cq, rpcmethod_FindFile_, context, request, false, nullptr);
+}
+
+::grpc::ClientReader< ::file_system::FileMetadata>* FileService::Stub::GetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request) {
+  return ::grpc::internal::ClientReaderFactory< ::file_system::FileMetadata>::Create(channel_.get(), rpcmethod_GetFileList_, context, request);
+}
+
+void FileService::Stub::async::GetFileList(::grpc::ClientContext* context, const ::file_system::GetFileListRequest* request, ::grpc::ClientReadReactor< ::file_system::FileMetadata>* reactor) {
+  ::grpc::internal::ClientCallbackReaderFactory< ::file_system::FileMetadata>::Create(stub_->channel_.get(), stub_->rpcmethod_GetFileList_, context, request, reactor);
+}
+
+::grpc::ClientAsyncReader< ::file_system::FileMetadata>* FileService::Stub::AsyncGetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::file_system::FileMetadata>::Create(channel_.get(), cq, rpcmethod_GetFileList_, context, request, true, tag);
+}
+
+::grpc::ClientAsyncReader< ::file_system::FileMetadata>* FileService::Stub::PrepareAsyncGetFileListRaw(::grpc::ClientContext* context, const ::file_system::GetFileListRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::file_system::FileMetadata>::Create(channel_.get(), cq, rpcmethod_GetFileList_, context, request, false, nullptr);
 }
 
 FileService::Service::Service() {
@@ -323,6 +391,16 @@ FileService::Service::Service() {
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       FileService_method_names[3],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< FileService::Service, ::file_system::FileMetadata, ::file_system::DownloadFileResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](FileService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::file_system::FileMetadata* req,
+             ::file_system::DownloadFileResponse* resp) {
+               return service->DownloadFileRequest(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      FileService_method_names[4],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< FileService::Service, ::file_system::FileRequest, ::file_system::FileChunk>(
           [](FileService::Service* service,
@@ -332,7 +410,7 @@ FileService::Service::Service() {
                return service->DownloadFile(ctx, req, writer);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      FileService_method_names[4],
+      FileService_method_names[5],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< FileService::Service, ::file_system::FileMetadata, ::file_system::UploadStatus, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](FileService::Service* service,
@@ -342,7 +420,7 @@ FileService::Service::Service() {
                return service->CheckUploadStatus(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      FileService_method_names[5],
+      FileService_method_names[6],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< FileService::Service, ::file_system::FileMetadata, ::file_system::OperationResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](FileService::Service* service,
@@ -352,7 +430,17 @@ FileService::Service::Service() {
                return service->MergeChunkRequest(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      FileService_method_names[6],
+      FileService_method_names[7],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< FileService::Service, ::file_system::ProgressRequest, ::file_system::ProgressRespond, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](FileService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::file_system::ProgressRequest* req,
+             ::file_system::ProgressRespond* resp) {
+               return service->ProgressCheck(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      FileService_method_names[8],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< FileService::Service, ::file_system::FindFileRequest, ::file_system::FileMetadata>(
           [](FileService::Service* service,
@@ -360,6 +448,16 @@ FileService::Service::Service() {
              const ::file_system::FindFileRequest* req,
              ::grpc::ServerWriter<::file_system::FileMetadata>* writer) {
                return service->FindFile(ctx, req, writer);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      FileService_method_names[9],
+      ::grpc::internal::RpcMethod::SERVER_STREAMING,
+      new ::grpc::internal::ServerStreamingHandler< FileService::Service, ::file_system::GetFileListRequest, ::file_system::FileMetadata>(
+          [](FileService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::file_system::GetFileListRequest* req,
+             ::grpc::ServerWriter<::file_system::FileMetadata>* writer) {
+               return service->GetFileList(ctx, req, writer);
              }, this)));
 }
 
@@ -387,6 +485,13 @@ FileService::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
+::grpc::Status FileService::Service::DownloadFileRequest(::grpc::ServerContext* context, const ::file_system::FileMetadata* request, ::file_system::DownloadFileResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
 ::grpc::Status FileService::Service::DownloadFile(::grpc::ServerContext* context, const ::file_system::FileRequest* request, ::grpc::ServerWriter< ::file_system::FileChunk>* writer) {
   (void) context;
   (void) request;
@@ -408,7 +513,21 @@ FileService::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
+::grpc::Status FileService::Service::ProgressCheck(::grpc::ServerContext* context, const ::file_system::ProgressRequest* request, ::file_system::ProgressRespond* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
 ::grpc::Status FileService::Service::FindFile(::grpc::ServerContext* context, const ::file_system::FindFileRequest* request, ::grpc::ServerWriter< ::file_system::FileMetadata>* writer) {
+  (void) context;
+  (void) request;
+  (void) writer;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status FileService::Service::GetFileList(::grpc::ServerContext* context, const ::file_system::GetFileListRequest* request, ::grpc::ServerWriter< ::file_system::FileMetadata>* writer) {
   (void) context;
   (void) request;
   (void) writer;

@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package file_system;
 service AuthService {
-  // 用户登录获取Token.
-  rpc Login(LoginRequest) returns (OperationResponse);
   
-  // 权限验证（元数据中携带Token）.
-  rpc CheckPermission(PermissionRequest) returns (PermissionResponse);
+  rpc Login(LoginRequest) returns (OperationResponse);// 用户登录获取Token.
+  
+  
+  rpc CheckPermission(PermissionRequest) returns (PermissionResponse);// 权限验证（元数据中携带Token）.
 }
 
 message LoginRequest {
@@ -15,13 +15,13 @@ message LoginRequest {
 }
 
 message PermissionRequest {
-  string resource_path = 1;  // 文件路径
-  string action = 2;         // 操作类型（read/write/delete）
+  string resource_path = 1;  // 文件路径.
+  string action = 2;         // 操作类型（read/write/delete）.
 }
 
 message PermissionResponse {
   bool allowed = 1;
-  string reason = 2;         // 权限不足时的说明
+  string reason = 2;         // 权限不足时的说明.
 }
 
 enum FileOperationType {
@@ -37,20 +37,29 @@ service FileService {
 
   rpc UploadFileRequest(FileMetadata) returns (UploadFileResponse);
 
-  // 客户端流式上传（支持断点续传）.
-  rpc UploadFile(stream FileChunk) returns (UploadStatus);
 
-  // 服务端流式下载.
-  rpc DownloadFile(FileRequest) returns (stream FileChunk);
+  rpc UploadFile(stream FileChunk) returns (UploadStatus);   // 客户端流式上传（支持断点续传).
 
-  // 查询上传断点状态.
-  rpc CheckUploadStatus(FileMetadata) returns (UploadStatus);
+
+  rpc DownloadFileRequest(FileMetadata) returns (DownloadFileResponse);//服务端流式下载请求.
+
+
+  rpc DownloadFile(FileRequest) returns (stream FileChunk);  // 服务端流式下载.
+
+
+  rpc CheckUploadStatus(FileMetadata) returns (UploadStatus);  // 查询上传断点状态.
  
-  //合并请求.
-  rpc MergeChunkRequest(FileMetadata) returns (OperationResponse);
+
+  rpc MergeChunkRequest(FileMetadata) returns (OperationResponse);  //合并并移动.
 
 
-  rpc FindFile(FindFileRequest) returns (stream FileMetadata);
+  rpc ProgressCheck(ProgressRequest) returns (ProgressRespond); //任务进度查询.
+
+
+  rpc FindFile(FindFileRequest) returns (stream FileMetadata); //查找文件.
+
+
+  rpc GetFileList(GetFileListRequest) returns (stream FileMetadata); //获取文件列表.
 } 
 message FileOperationRequest{
     FileOperationType type = 1;
@@ -62,29 +71,47 @@ message FileOperationRequest{
     }
 }
 
+message  GetFileListRequest{
+    string root_path = 1;
+}
+
+message ProgressRequest{
+    int64 progress_id = 1;
+}
+
+message ProgressRespond{
+    int32 progress_value = 1;
+}
+
 message CreateRequest{
     string root_path = 1;
     string name = 2;
 }
 message RemoveRequest{
-    string root_path = 1;
-    string name = 2;
+    FileMetadata metedata = 1;
 }
 
 message MergeChunkRequest{
     string file_id = 1;
+    string object_path = 2;
 }
 
 message ReNameRequest{
     string root_path = 1;
     string old_name = 2;
     string new_name = 3;
+    string type = 4;
 }
 message CopyRequest{
     string old_root_path = 1;
     string old_name = 2;
     string new_root_path = 3;
     string new_name = 4;
+}
+
+message DownloadFileResponse{
+    OperationResponse status = 1;
+    string file_id = 2;
 }
 
 message UploadFileResponse{
@@ -97,42 +124,42 @@ message FindFileRequest{
     optional string root_path = 2;
 }
 
-// 文件分块消息.
-message FileChunk {
-  bytes content = 1;         // 文件块二进制数据
-  string file_id = 2;        // 文件唯一标识
-  int32 index = 3;          // 当前块偏移量（用于断点续传）
+
+message FileChunk {// 文件分块消息.
+  string file_id = 1;        // 文件唯一标识.
+  bytes data = 2;         // 文件块二进制数据.
+  int32 chunk_size = 3;      // 文件块大小（单位：字节）.
+  int32 index = 4;          // 当前块偏移量（用于断点续传）.
+  optional string md5 = 5;           //校验传输文件是否正确.
 }
 
 // 上传状态反馈.
 message UploadStatus {
   OperationResponse status = 1;
-  map<int32,bool> chunk_status = 2; //上传块情况
+  map<int32,bool> chunk_status = 2; //上传块情况.
 }
 
 // 文件请求参数.
 message FileRequest {
   string file_id = 1;
-  optional int32 index = 2; // 下载起始偏移量（断点续传）
+  optional int32 index = 2; // 下载起始偏移量（断点续传）.
 }
 
 
 
-// 文件元数据定义.
-message FileMetadata {
+
+message FileMetadata {// 文件元数据定义.
 
   string file_id = 1;  
-  // 文件基础元数据.
-  string file_name = 2;            // 原始文件名（参考网页4测试用例）
-  int64 file_size = 3;             // 文件总大小（单位：字节）
-  string parent_path = 4;            // 文件存在的目录
+  string file_name = 2;            // 原始文件名（参考网页4测试用例）.
+  int64 file_size = 3;             // 文件总大小（单位：字节）.
+  string parent_path = 4;            // 文件存在的目录.
   
-  // 扩展字段.
-  map<string, string> extensions = 5; // 自定义元数据（如标签）
+  map<string, string> extensions = 5; // 自定义元数据（如标签）.
 }
 
-// 通用操作响应.
-message OperationResponse {
+
+message OperationResponse {// 通用操作响应.
   bool success = 1;
   optional string extensions = 2;
   optional string error_detail = 3;
